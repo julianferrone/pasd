@@ -340,11 +340,11 @@ fn main() {
     pool.complete_task(task_3);
     pool.complete_task(task_4);
 
-
-
     println!("{:#?}", pool);
 }
 
 // TODO: convert into Rust web-server
-// TODO: add cascading statuses
-// -- if a task goes
+// Front-end: HTMX
+// Templating: Askana
+// Styling: Tailwind CSS
+// Back-end: Axum
