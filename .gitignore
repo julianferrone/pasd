@@ -1,0 +1,5 @@
+/target
+.env
+/migrations
+!/migrations/up.sql
+!/migrations/down.sql
