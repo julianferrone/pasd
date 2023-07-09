@@ -7,7 +7,7 @@ use std::fs;
 use tower::ServiceBuilder;
 use tower_http::trace;
 pub mod errors;
-pub mod handlers;
+pub mod hypermedia_handlers;
 pub mod model;
 pub mod templater;
 
@@ -26,16 +26,16 @@ async fn main() -> Result<(), String> {
 
     // build our application with a route
     let app = Router::new()
-        .route("/", get(handlers::get_root))
-        .route("/theme", get(handlers::get_all_themes))
-        .route("/theme/:theme_id", get(handlers::get_theme))
-        .route("/objective", get(handlers::get_all_objectives))
-        .route("/objective/:objective_id", get(handlers::get_objective))
-        .route("/projects", get(handlers::get_all_projects))
-        .route("/project/:project_id", get(handlers::get_project))
-        .route("/task/", get(handlers::get_all_tasks))
-        .route("/task/:task_id", get(handlers::get_task))
-        .route("/measure/:measure_id", get(handlers::get_measure))
+        .route("/", get(hypermedia_handlers::get_root))
+        .route("/theme", get(hypermedia_handlers::get_all_themes))
+        .route("/theme/:theme_id", get(hypermedia_handlers::get_theme))
+        .route("/objective", get(hypermedia_handlers::get_all_objectives))
+        .route("/objective/:objective_id", get(hypermedia_handlers::get_objective))
+        .route("/projects", get(hypermedia_handlers::get_all_projects))
+        .route("/project/:project_id", get(hypermedia_handlers::get_project))
+        .route("/task/", get(hypermedia_handlers::get_all_tasks))
+        .route("/task/:task_id", get(hypermedia_handlers::get_task))
+        .route("/measure/:measure_id", get(hypermedia_handlers::get_measure))
         .layer(
             ServiceBuilder::new()
                 .layer(Extension(pool))
