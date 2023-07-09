@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS tasks;
+DROP TABLE IF EXISTS measurements;
+DROP TABLE IF EXISTS keyresults;
+DROP TABLE IF EXISTS initiatives;
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS objectives;
+DROP TABLE IF EXISTS themes;
