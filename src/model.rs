@@ -9,6 +9,10 @@ pub struct Theme {
     pub theme_status: Status,
 }
 
+pub struct CreateTheme {
+    pub title: String,
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct Objective {
     pub objective_id: i32,
@@ -21,23 +25,40 @@ pub struct Objective {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+pub struct CreateObjective {
+    pub title: String,
+    pub theme_id: i32,
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct KeyResult {
     pub keyresult_id: i32,
     pub title: String,
+    pub objective_id: i32,
     // measurements: Vec<String>,
     pub created_at: Option<chrono::DateTime<chrono::Utc>>,
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+pub struct CreateKeyResult {
+    pub title: String,
+    pub objective_id: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct Initiative {
     pub initiative_id: i32,
     pub title: String,
+    pub objective_id: i32,
     // explanation: String,
     pub initiative_status: Status,
     pub created_at: Option<chrono::DateTime<chrono::Utc>>,
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+pub struct CreateInitiative {
+    pub title: String,
+    pub objective_id: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -45,8 +66,14 @@ pub struct Project {
     pub project_id: i32,
     pub title: String,
     pub project_status: Status,
+    pub objective_id: i32,
     pub created_at: Option<chrono::DateTime<chrono::Utc>>,
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+pub struct CreateProject {
+    pub title: String,
+    pub objective_id: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -54,16 +81,28 @@ pub struct Task {
     pub task_id: i32,
     pub title: String,
     pub task_status: Status,
+    pub project_id: i32,
     pub created_at: Option<chrono::DateTime<chrono::Utc>>,
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+pub struct CreateTask {
+    pub title: String,
+    pub project_id: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct Measurement {
     pub measurement_id: i32,
     pub measurement: String,
+    pub keyresult_id: i32,
     pub created_at: Option<chrono::DateTime<chrono::Utc>>,
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+pub struct CreateMeasurement {
+    pub title: String,
+    pub keyresult_id: i32,
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize, Deserialize, sqlx::Type)]
