@@ -5,6 +5,7 @@ use axum::{
     response::{Html, IntoResponse},
 };
 
+// THEME TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "theme.html")]
 pub struct ThemeTemplate {
@@ -29,6 +30,19 @@ impl ThemeTemplate {
     }
 }
 
+#[derive(askama::Template)]
+#[template(path = "all_themes.html")]
+pub struct AllThemesTemplate {
+    pub themes: Option<Vec<model::Theme>>,
+}
+
+impl AllThemesTemplate {
+    pub fn new(themes: Option<Vec<model::Theme>>) -> AllThemesTemplate {
+        AllThemesTemplate { themes: themes }
+    }
+}
+
+// OBJECTIVE TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "objective.html")]
 pub struct ObjectiveTemplate {
@@ -57,6 +71,125 @@ impl ObjectiveTemplate {
             initiatives: initiatives,
             projects: projects,
         }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "all_objectives.html")]
+pub struct AllObjectivesTemplate {
+    pub objectives: Option<Vec<model::Objective>>,
+}
+
+impl AllObjectivesTemplate {
+    pub fn new(themes: Option<Vec<model::Objective>>) -> AllObjectivesTemplate {
+        AllObjectivesTemplate { objectives: themes }
+    }
+}
+
+// KEY RESULT TEMPLATES
+#[derive(askama::Template)]
+#[template(path = "keyresult.html")]
+pub struct KeyResultTemplate {
+    pub title: String,
+    pub objective_id: i32,
+    pub objective_title: String,
+    pub measurements: Option<Vec<model::Measurement>>,
+}
+
+impl KeyResultTemplate {
+    pub fn new(
+        title: String,
+        objective_id: i32,
+        objective_title: String,
+        measurements: Option<Vec<model::Measurement>>,
+    ) -> KeyResultTemplate {
+        KeyResultTemplate {
+            title,
+            objective_id,
+            objective_title,
+            measurements,
+        }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "all_keyresults.html")]
+pub struct AllKeyResultsTemplate {
+    pub keyresults: Option<Vec<model::KeyResult>>,
+}
+
+impl AllKeyResultsTemplate {
+    pub fn new(keyresults: Option<Vec<model::KeyResult>>) -> AllKeyResultsTemplate {
+        AllKeyResultsTemplate { keyresults }
+    }
+}
+
+// INITIATIVE TEMPLATES
+#[derive(askama::Template)]
+#[template(path = "initiative.html")]
+pub struct InitiativeTemplate {
+    pub title: String,
+    pub objective_id: i32,
+    pub objective_title: String,
+}
+
+impl InitiativeTemplate {
+    pub fn new(title: String, objective_id: i32, objective_title: String) -> InitiativeTemplate {
+        InitiativeTemplate {
+            title,
+            objective_id,
+            objective_title,
+        }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "all_initiatives.html")]
+pub struct AllInitiativesTemplate {
+    pub initiatives: Option<Vec<model::Initiative>>,
+}
+
+impl AllInitiativesTemplate {
+    pub fn new(initiatives: Option<Vec<model::Initiative>>) -> AllInitiativesTemplate {
+        AllInitiativesTemplate { initiatives }
+    }
+}
+
+// PROJECT TEMPLATES
+#[derive(askama::Template)]
+#[template(path = "project.html")]
+pub struct ProjectTemplate {
+    pub title: String,
+    pub objective_id: i32,
+    pub objective_title: String,
+    pub tasks: Option<Vec<model::Task>>,
+}
+
+impl ProjectTemplate {
+    pub fn new(
+        title: String,
+        objective_id: i32,
+        objective_title: String,
+        tasks: Option<Vec<model::Task>>,
+    ) -> ProjectTemplate {
+        ProjectTemplate {
+            title,
+            objective_id,
+            objective_title,
+            tasks,
+        }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "all_projects.html")]
+pub struct AllProjectsTemplate {
+    pub projects: Option<Vec<model::Project>>,
+}
+
+impl AllProjectsTemplate {
+    pub fn new(projects: Option<Vec<model::Project>>) -> AllProjectsTemplate {
+        AllProjectsTemplate { projects }
     }
 }
 
