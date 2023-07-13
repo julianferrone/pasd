@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1>Initiatives</h1>
+            {% if initiatives.is_some() -%}
+            {% let initiatives = initiatives.clone().unwrap() %}
+            <ul>
+                {% for initiative in initiatives %}
+                <li><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {%- else -%}
+            <p>No initiatives currently.</p>
+            {%- endif %}
+</body>
+
+</html>

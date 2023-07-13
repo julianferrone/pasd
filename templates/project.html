@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1>Project: {{ title }}</h1>
+    <h2>Objective: <a href="http://localhost:3000/objective/{{ objective_id }}"> {{ objective_title }}</a> </h2>
+
+    <h2>Tasks</h2>
+    {% if tasks.is_some() -%}
+    {% let tasks = tasks.clone().unwrap() %}
+    <ul>
+        {% for task in tasks %}
+        <li>{{ task.title }}</li>
+        {% endfor %}
+    </ul>
+    {%- else -%}
+    <p>No tasks currently.</p>
+    {%- endif %}
+
+</body>
+
+</html>

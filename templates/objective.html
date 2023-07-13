@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <html>
+
 <body>
 
-<h1>Objective: {{ title }}</h1>
-<h2>Theme: <a href="http://localhost:3000/theme/{{ theme_id }}"> {{ theme_title }}</a> </h2>
+    <h1>Objective: {{ title }}</h1>
+    <h2>Theme: <a href="http://localhost:3000/theme/{{ theme_id }}"> {{ theme_title }}</a> </h2>
 
-<h2>Key Results</h2>
-{% if keyresults.is_some() -%}
-{% let keyresults = keyresults.clone().unwrap() %}
-<ul>
-    {% for keyresult in keyresults %}
-    <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a></li>
-    {% endfor %}
-</ul>
-{%- else -%}
-<p>No key results currently.</p>
-{%- endif %}
-
-
-<h2>Initiatives</h2>
-{% if initiatives.is_some() -%}
-{% let initiatives = initiatives.clone().unwrap() %}
-<ul>
-    {% for initiative in initiatives %}
-    <li><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a></li>
-    {% endfor %}
-</ul>
-{%- else -%}
-<p>No initiatives currently.</p>
-{%- endif %}
+    <h2>Key Results</h2>
+    {% if keyresults.is_some() -%}
+    {% let keyresults = keyresults.clone().unwrap() %}
+    <ul>
+        {% for keyresult in keyresults %}
+        <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {%- else -%}
+    <p>No key results currently.</p>
+    {%- endif %}
 
 
-<h2>Projects</h2>
-{% if projects.is_some() -%}
-{% let projects = projects.clone().unwrap() %}
-<ul>
-    {% for project in projects %}
-    <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a></li>
-    {% endfor %}
-</ul>
-{%- else -%}
-<p>No projects currently.</p>
-{%- endif %}
+    <h2>Initiatives</h2>
+    {% if initiatives.is_some() -%}
+    {% let initiatives = initiatives.clone().unwrap() %}
+    <ul>
+        {% for initiative in initiatives %}
+        <li><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {%- else -%}
+    <p>No initiatives currently.</p>
+    {%- endif %}
+
+
+    <h2>Projects</h2>
+    {% if projects.is_some() -%}
+    {% let projects = projects.clone().unwrap() %}
+    <ul>
+        {% for project in projects %}
+        <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {%- else -%}
+    <p>No projects currently.</p>
+    {%- endif %}
 
 </body>
-</html> 
+
+</html>

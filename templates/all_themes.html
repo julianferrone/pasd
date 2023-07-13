@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <body>
 
-<h1>Themes <h1>
-
+    <h1>Themes</h1>
+            {% if themes.is_some() -%}
+            {% let themes = themes.clone().unwrap() %}
+            <ul>
+                {% for theme in themes %}
+                <li><a href="http://localhost:3000/theme/{{ theme.theme_id }}">{{ theme.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {%- else -%}
+            <p>No themes currently.</p>
+            {%- endif %}
 </body>
-</html> 
+
+</html>

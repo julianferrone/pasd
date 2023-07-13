@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1>Projects<h1>
+            {% if projects.is_some() -%}
+            {% let projects = projects.clone().unwrap() %}
+            <ul>
+                {% for project in projects %}
+                <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {%- else -%}
+            <p>No projects currently.</p>
+            {%- endif %}
+</body>
+
+</html>

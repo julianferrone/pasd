@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1>Objectives</h1>
+            {% if objectives.is_some() -%}
+            {% let objectives = objectives.clone().unwrap() %}
+            <ul>
+                {% for objective in objectives %}
+                <li><a href="http://localhost:3000/objective/{{ objective.objective_id }}">{{ objective.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {%- else -%}
+            <p>No objectives currently.</p>
+            {%- endif %}
+</body>
+
+</html>
