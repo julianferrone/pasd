@@ -1,13 +1,18 @@
-<div>
-    {% if themes.is_some() -%}
-    {% let themes = themes.clone().unwrap() %}
+<div id="themes_response">
+    {% match themes -%}
+    {% when Some with (thms) %}
+    {% let thms_len = thms.len() %}
+    {% if thms_len > 0 %}
     <ul>
-        {% for theme in themes %}
+        {% for theme in thms %}
         <li><a href="http://localhost:3000/theme/{{ theme.theme_id }}">{{ theme.title }}</a>
         </li>
         {% endfor %}
     </ul>
-    {%- else -%}
+    {% else -%}
     <p>No themes currently.</p>
-    {%- endif %}
+    {% endif -%}
+    {% when None %}
+    <p>Error when retrieving the theme rows from database.</p>
+    {% endmatch %}
 </div>

@@ -1,13 +1,18 @@
-<div>
-    {% if projects.is_some() -%}
-    {% let projects = projects.clone().unwrap() %}
+<div id="projects_response">
+    {% match projects -%}
+    {% when Some with (projs) %}
+    {% let projs_len = projs.len() %}
+    {% if projs_len > 0 %}
     <ul>
-        {% for project in projects %}
+        {% for project in projs %}
         <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a>
         </li>
         {% endfor %}
     </ul>
-    {%- else -%}
+    {% else -%}
     <p>No projects currently.</p>
-    {%- endif %}
+    {% endif -%}
+    {% when None %}
+    <p>Error when retrieving the project rows from database.</p>
+    {% endmatch %}
 </div>

@@ -1,13 +1,20 @@
-<div>
-    {% if keyresults.is_some() -%}
-    {% let keyresults = keyresults.clone().unwrap() %}
-    <ul>
-        {% for keyresult in keyresults %}
-        <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {%- else -%}
+<div id="keyresults_response">
+    {% match keyresults %}
+    {% when Some with (keyrs) %}
+    {% let keyrs_len = keyrs.len() %}
+    {% if keyrs_len > 0 %}
+    <div>
+        <ul>
+            {% for keyresult in keyrs %}
+            <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% else %}
     <p>No key results currently.</p>
-    {%- endif %}
+    {% endif %}
+    {% when None %}
+    <p>Error when retrieving the key result rows from database.</p>
+    {% endmatch %}
 </div>

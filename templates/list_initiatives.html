@@ -1,13 +1,18 @@
-<div>
-    {% if initiatives.is_some() -%}
-    {% let initiatives = initiatives.clone().unwrap() %}
+<div id="initiatives_response">
+    {% match initiatives -%}
+    {% when Some with (inis) %}
+    {% let inis_len = inis.len() %}
+    {% if inis_len > 0 %}
     <ul>
-        {% for initiative in initiatives %}
+        {% for initiative in inis %}
         <li><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a>
         </li>
         {% endfor %}
     </ul>
-    {%- else -%}
+    {% else -%}
     <p>No initiatives currently.</p>
-    {%- endif %}
+    {% endif -%}
+    {% when None %}
+    <p>Error when retrieving the initiative rows from database.</p>
+    {% endmatch %}
 </div>
