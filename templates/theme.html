@@ -1,22 +1,35 @@
 <!DOCTYPE html>
 <html>
 
-<body>
+<head>
+    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
+    <script type="text/javascript" src="/static/js/json-enc.js"></script>
+</head>
+
+<body hx-boost="true" hx-ext="json-enc">
 
     <h1>Theme: {{ title }}</h1>
     <h2>Status: {{ theme_status }} </h2>
     <h2>Objectives</h2>
-    {% if objectives.is_some() -%}
-    {% let objs = objectives.clone().unwrap() %}
-    <ul>
-        {% for objective in objs %}
-        <li><a href="http://localhost:3000/objective/{{ objective.objective_id }}">{{ objective.title }}</a></li>
-        {% endfor %}
-    </ul>
-    {%- else -%}
-    <p>No objectives currently.</p>
-    {%- endif %}
+    <div id="response">
+        {% if objectives.is_some() -%}
+        {% let objs = objectives.clone().unwrap() %}
+        <ul>
+            {% for objective in objs %}
+            <li><a href="http://localhost:3000/objective/{{ objective.objective_id }}">{{ objective.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {%- else -%}
+        <p>No objectives currently.</p>
+        {%- endif %}
+    </div>
 
+    <b>Add objective</b>
+    <form hx-post="/objective" hx-target="#response" hx-vals='{"theme_id": {{ theme_id }} }'>
+        <label for="new_title">New objective title:</label>
+        <input type="text" id="new_title" name="new_title"><br>
+        <button type="submit">Create Objective</button>
+    </form>
 </body>
 
 </html>
