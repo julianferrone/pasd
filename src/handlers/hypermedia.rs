@@ -135,6 +135,27 @@ pub async fn get_theme(
     }
 }
 
+// GET /theme/:theme_id/objectives
+pub async fn get_theme_objectives(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(theme_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let objectives: Option<Vec<model::Objective>> = sqlx::query_as(
+        r#"SELECT *
+        FROM objectives
+        where objectives.theme_id = $1
+        ORDER BY objectives.objective_id;"#,
+    )
+    .bind(&theme_id)
+    .fetch_all(&pool)
+    .await
+    .ok();
+    let template = templater::ListObjectivesTemplate::new(
+        objectives.clone(),
+    );
+    templater::HtmlTemplate(template).into_response()
+}
+
 // GET /objective/:objective_id
 pub async fn get_objective(
     Extension(pool): Extension<PgPool>,
@@ -355,17 +376,16 @@ pub async fn add_objective(
     Extension(pool): Extension<PgPool>,
     extract::Json(create_objective): extract::Json<model::CreateObjective>,
 ) -> impl IntoResponse {
-    // let _ = sqlx::query(r#"INSERT INTO objectives (title, theme_id) VALUES ($1, $2);"#)
-    //     .bind(create_objective.title)
-    //     .bind(create_objective.theme_id)
-    //     .fetch_all(&pool)
-    //     .await;
-    let new_title = create_objective.new_title;
+    let _ = sqlx::query(r#"INSERT INTO objectives (title, theme_id) VALUES ($1, $2);"#)
+        .bind(create_objective.new_title)
+        .bind(create_objective.theme_id)
+        .fetch_all(&pool)
+        .await;
+    // let new_title = create_objective.new_title;
     let theme_id = create_objective.theme_id;
-    // let uri = format!("/theme/{theme_id}");
-    // Redirect::to(&uri)
-    format!("Adding objective (title: {new_title}, theme_id: {theme_id})")
-        .to_owned()
+    let uri = format!("/theme/{theme_id}/objectives");
+    Redirect::to(&uri)
+    // format!("Adding objective (title: {new_title}, theme_id: {theme_id})").to_owned()
 }
 
 // POST /keyresult
