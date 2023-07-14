@@ -76,6 +76,18 @@ impl ObjectiveTemplate {
 }
 
 #[derive(askama::Template)]
+#[template(path = "list_objectives.html")]
+pub struct ListObjectivesTemplate {
+    pub objectives: Option<Vec<model::Objective>>,
+}
+
+impl ListObjectivesTemplate {
+    pub fn new(themes: Option<Vec<model::Objective>>) -> ListObjectivesTemplate {
+        ListObjectivesTemplate { objectives: themes }
+    }
+}
+
+#[derive(askama::Template)]
 #[template(path = "all_objectives.html")]
 pub struct AllObjectivesTemplate {
     pub objectives: Option<Vec<model::Objective>>,
