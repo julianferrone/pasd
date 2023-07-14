@@ -1,0 +1,13 @@
+<div>
+    {% if keyresults.is_some() -%}
+    {% let keyresults = keyresults.clone().unwrap() %}
+    <ul>
+        {% for keyresult in keyresults %}
+        <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {%- else -%}
+    <p>No key results currently.</p>
+    {%- endif %}
+</div>

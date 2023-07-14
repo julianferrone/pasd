@@ -1,0 +1,13 @@
+<div>
+    {% if themes.is_some() -%}
+    {% let themes = themes.clone().unwrap() %}
+    <ul>
+        {% for theme in themes %}
+        <li><a href="http://localhost:3000/theme/{{ theme.theme_id }}">{{ theme.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {%- else -%}
+    <p>No themes currently.</p>
+    {%- endif %}
+</div>
