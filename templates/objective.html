@@ -1,49 +1,70 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
+    <script type="text/javascript" src="/static/js/json-enc.js"></script>
+</head>
+
 <body>
 
     <h1>Objective: {{ title }}</h1>
     <h2>Theme: <a href="http://localhost:3000/theme/{{ theme_id }}"> {{ theme_title }}</a> </h2>
 
     <h2>Key Results</h2>
-    {% if keyresults.is_some() -%}
-    {% let keyresults = keyresults.clone().unwrap() %}
-    <ul>
-        {% for keyresult in keyresults %}
-        <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a></li>
-        {% endfor %}
-    </ul>
-    {%- else -%}
-    <p>No key results currently.</p>
-    {%- endif %}
-
+    <div id="keyresults_response">
+        {% if keyresults.is_some() -%}
+        {% let keyresults = keyresults.clone().unwrap() %}
+        <ul>
+            {% for keyresult in keyresults %}
+            <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {%- else -%}
+        <p>No key results currently.</p>
+        {%- endif %}
+    </div>
+    <form hx-post="/keyresult" hx-target="#keyresults_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+        <button type="submit">Create Key Result</button>
+    </form>
 
     <h2>Initiatives</h2>
-    {% if initiatives.is_some() -%}
-    {% let initiatives = initiatives.clone().unwrap() %}
-    <ul>
-        {% for initiative in initiatives %}
-        <li><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a></li>
-        {% endfor %}
-    </ul>
-    {%- else -%}
-    <p>No initiatives currently.</p>
-    {%- endif %}
-
+    <div id="initiatives_response">
+        {% if initiatives.is_some() -%}
+        {% let initiatives = initiatives.clone().unwrap() %}
+        <ul>
+            {% for initiative in initiatives %}
+            <li><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {%- else -%}
+        <p>No initiatives currently.</p>
+        {%- endif %}
+    </div>
+    <form hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+        <button type="submit">Create Initiative</button>
+    </form>
 
     <h2>Projects</h2>
     {% if projects.is_some() -%}
     {% let projects = projects.clone().unwrap() %}
-    <ul>
-        {% for project in projects %}
-        <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a></li>
-        {% endfor %}
-    </ul>
-    {%- else -%}
-    <p>No projects currently.</p>
-    {%- endif %}
-
+    <div id="projects_response">
+        <ul>
+            {% for project in projects %}
+            <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a></li>
+            {% endfor %}
+        </ul>
+        {%- else -%}
+        <p>No projects currently.</p>
+        {%- endif %}
+        <form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+            <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+            <button type="submit">Create Project</button>
+        </form>
+    </div>
 </body>
 
 </html>
