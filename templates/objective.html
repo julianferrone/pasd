@@ -6,23 +6,31 @@
     <script type="text/javascript" src="/static/js/json-enc.js"></script>
 </head>
 
-<body>
+<body hx-boost="true" hx-ext="json-enc">
 
     <h1>Objective: {{ title }}</h1>
     <h2>Theme: <a href="http://localhost:3000/theme/{{ theme_id }}"> {{ theme_title }}</a> </h2>
 
     <h2>Key Results</h2>
     <div id="keyresults_response">
-        {% if keyresults.is_some() -%}
-        {% let keyresults = keyresults.clone().unwrap() %}
-        <ul>
-            {% for keyresult in keyresults %}
-            <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a></li>
-            {% endfor %}
-        </ul>
-        {%- else -%}
+        {% match keyresults %}
+        {% when Some with (keyrs) %}
+        {% let keyrs_len = keyrs.len() %}
+        {% if keyrs_len > 0 %}
+        <div>
+            <ul>
+                {% for keyresult in keyrs %}
+                <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
         <p>No key results currently.</p>
-        {%- endif %}
+        {% endif %}
+        {% when None %}
+        <p>Error when retrieving the key result rows from database.</p>
+        {% endmatch %}
     </div>
     <form hx-post="/keyresult" hx-target="#keyresults_response" hx-vals='{"objective_id": {{ objective_id }} }'>
         <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
@@ -31,17 +39,22 @@
 
     <h2>Initiatives</h2>
     <div id="initiatives_response">
-        {% if initiatives.is_some() -%}
-        {% let initiatives = initiatives.clone().unwrap() %}
+        {% match initiatives -%}
+        {% when Some with (inis) %}
+        {% let inis_len = inis.len() %}
+        {% if inis_len > 0 %}
         <ul>
-            {% for initiative in initiatives %}
+            {% for initiative in inis %}
             <li><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a>
             </li>
             {% endfor %}
         </ul>
-        {%- else -%}
+        {% else -%}
         <p>No initiatives currently.</p>
-        {%- endif %}
+        {% endif -%}
+        {% when None %}
+        <p>Error when retrieving the initiative rows from database.</p>
+        {% endmatch %}
     </div>
     <form hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'>
         <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
@@ -49,21 +62,28 @@
     </form>
 
     <h2>Projects</h2>
-    {% if projects.is_some() -%}
-    {% let projects = projects.clone().unwrap() %}
     <div id="projects_response">
+        {% match projects -%}
+        {% when Some with (projs) %}
+        {% let projs_len = projs.len() %}
+        {% if projs_len > 0 %}
         <ul>
-            {% for project in projects %}
-            <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a></li>
+            {% for project in projs %}
+            <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a>
+            </li>
             {% endfor %}
         </ul>
-        {%- else -%}
+        {% else -%}
         <p>No projects currently.</p>
-        {%- endif %}
-        <form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
-            <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
-            <button type="submit">Create Project</button>
-        </form>
+        {% endif -%}
+        {% when None %}
+        <p>Error when retrieving the project rows from database.</p>
+        {% endmatch %}
+    </div>
+    <form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+        <button type="submit">Create Project</button>
+    </form>
     </div>
 </body>
 
