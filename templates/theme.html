@@ -11,25 +11,7 @@
     <h1>Theme: {{ title }}</h1>
     <h2>Status: {{ theme_status }} </h2>
     <h2>Objectives</h2>
-    <div id="objectives_response">
-        {% match objectives -%}
-        {% when Some with (objectives) %}
-        {% let objectives_len = objectives.len() %}
-        {% if objectives_len > 0 %}
-        <ul>
-            {% for objective in objectives %}
-            <li><a href="http://localhost:3000/objective/{{ objective.objective_id }}">{{ objective.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-        {% else -%}
-        <p>No objectives currently.</p>
-        {% endif -%}
-        {% when None %}
-        <p>Error when retrieving the objective rows from database.</p>
-        {% endmatch %}
-    </div>
-
+    {% include "list_objectives.html" %}
     <b>Add objective</b>
     <form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }'>
         <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
