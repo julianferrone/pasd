@@ -10,7 +10,7 @@ use axum::{
 #[template(path = "theme.html")]
 pub struct ThemeTemplate {
     pub title: String,
-    // pub theme_id: i32,
+    pub theme_id: i32,
     pub theme_status: model::Status,
     pub objectives: Option<Vec<model::Objective>>,
 }
@@ -18,12 +18,13 @@ pub struct ThemeTemplate {
 impl ThemeTemplate {
     pub fn new(
         title: String,
+        theme_id: i32,
         theme_status: model::Status,
         objectives: Option<Vec<model::Objective>>,
     ) -> ThemeTemplate {
         ThemeTemplate {
             title: title,
-            // theme_id: theme.theme_id,
+            theme_id: theme_id,
             theme_status: theme_status,
             objectives: objectives,
         }
