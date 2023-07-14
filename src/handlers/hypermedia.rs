@@ -95,7 +95,7 @@ pub async fn get_all_tasks(Extension(pool): Extension<PgPool>) -> impl IntoRespo
 // GET /measure/
 pub async fn get_all_measures() {}
 
-// GET /theme/id
+// GET /theme/:theme_id
 pub async fn get_theme(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
@@ -119,8 +119,12 @@ pub async fn get_theme(
             .fetch_all(&pool)
             .await
             .ok();
-            let template =
-                templater::ThemeTemplate::new(theme.title, theme.theme_status, objectives.clone());
+            let template = templater::ThemeTemplate::new(
+                theme.title,
+                theme_id,
+                theme.theme_status,
+                objectives.clone(),
+            );
             templater::HtmlTemplate(template).into_response()
         }
         Err(_) => {
@@ -131,7 +135,7 @@ pub async fn get_theme(
     }
 }
 
-// GET /objective/id
+// GET /objective/:objective_id
 pub async fn get_objective(
     Extension(pool): Extension<PgPool>,
     extract::Path(objective_id): extract::Path<i32>,
@@ -204,7 +208,7 @@ pub async fn get_objective(
     }
 }
 
-// GET /keyresult/id
+// GET /keyresult/:keyresult_id
 pub async fn get_keyresult(
     Extension(pool): Extension<PgPool>,
     extract::Path(keyresult_id): extract::Path<i32>,
@@ -253,7 +257,7 @@ pub async fn get_keyresult(
     }
 }
 
-// GET /initiative/id
+// GET /initiative/:initiative_id
 pub async fn get_initiative(
     Extension(pool): Extension<PgPool>,
     extract::Path(initiative_id): extract::Path<i32>,
@@ -290,7 +294,7 @@ pub async fn get_initiative(
     }
 }
 
-// GET /project/id
+// GET /project/:project_id
 pub async fn get_project(
     Extension(pool): Extension<PgPool>,
     extract::Path(project_id): extract::Path<i32>,
@@ -327,10 +331,10 @@ pub async fn get_project(
     }
 }
 
-// GET /task/id
+// GET /task/:task_id
 pub async fn get_task() {}
 
-// GET /measure/id
+// GET /measure/:measure_id
 pub async fn get_measure() {}
 
 // POST /theme
@@ -350,13 +354,18 @@ pub async fn add_theme(
 pub async fn add_objective(
     Extension(pool): Extension<PgPool>,
     extract::Json(create_objective): extract::Json<model::CreateObjective>,
-) -> Redirect {
-    let _ = sqlx::query(r#"INSERT INTO objectives (title, theme_id) VALUES ($1, $2);"#)
-        .bind(create_objective.title)
-        .fetch_all(&pool)
-        .await;
-
-    Redirect::to("/objective")
+) -> impl IntoResponse {
+    // let _ = sqlx::query(r#"INSERT INTO objectives (title, theme_id) VALUES ($1, $2);"#)
+    //     .bind(create_objective.title)
+    //     .bind(create_objective.theme_id)
+    //     .fetch_all(&pool)
+    //     .await;
+    let new_title = create_objective.new_title;
+    let theme_id = create_objective.theme_id;
+    // let uri = format!("/theme/{theme_id}");
+    // Redirect::to(&uri)
+    format!("Adding objective (title: {new_title}, theme_id: {theme_id})")
+        .to_owned()
 }
 
 // POST /keyresult
@@ -424,44 +433,44 @@ pub async fn add_measure(
     Redirect::to("/measurement")
 }
 
-// DELETE /theme/id
+// DELETE /theme/:theme_id
 pub async fn remove_theme() {}
 
-// DELETE /objective/id
+// DELETE /objective/:objective_id
 pub async fn remove_objective() {}
 
-// DELETE /keyresult/id
+// DELETE /keyresult/:keyresult_id
 pub async fn remove_keyresult() {}
 
-// DELETE /initiative/id
+// DELETE /initiative/:initiative_id
 pub async fn remove_initiative() {}
 
-// DELETE /project/id
+// DELETE /project/:project_id
 pub async fn remove_project() {}
 
-// DELETE /task/id
+// DELETE /task/:task_id
 pub async fn remove_task() {}
 
-// DELETE /measure/id
+// DELETE /measure/:measure_id
 pub async fn remove_measure() {}
 
-// PUT /theme/id
+// PUT /theme/:theme_id
 pub async fn update_theme() {}
 
-// PUT /objective/id
+// PUT /objective/:objective_id
 pub async fn update_objective() {}
 
-// PUT /keyresult/id
+// PUT /keyresult/:keyresult_id
 pub async fn update_keyresult() {}
 
-// PUT /initiative/id
+// PUT /initiative/:initiative_id
 pub async fn update_initiative() {}
 
-// PUT /project/id
+// PUT /project/:project_id
 pub async fn update_project() {}
 
-// PUT /task/id
+// PUT /task/:task_id
 pub async fn update_task() {}
 
-// PUT /measure/id
+// PUT /measure/:measure_id
 pub async fn update_measure() {}

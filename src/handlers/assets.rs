@@ -8,8 +8,8 @@ use mime::{
     TEXT_JAVASCRIPT,
 };
 
-const HTMX: &str = include_str!("../static/js/htmx.min.js");
-const HTMX_EXT_JSON: &str = include_str!("../static/js/json-enc.js");
+const HTMX: &str = include_str!("../../static/js/htmx.min.js");
+const HTMX_EXT_JSON: &str = include_str!("../../static/js/json-enc.js");
 
 async fn asset(source: &'static [u8], ty: &'static str) -> impl IntoResponse {
     let mut headermap = HeaderMap::new();
