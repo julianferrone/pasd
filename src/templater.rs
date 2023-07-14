@@ -48,6 +48,7 @@ impl AllThemesTemplate {
 #[template(path = "objective.html")]
 pub struct ObjectiveTemplate {
     pub title: String,
+    pub objective_id: i32,
     pub theme_id: i32,
     pub theme_title: String,
     pub keyresults: Option<Vec<model::KeyResult>>,
@@ -58,6 +59,7 @@ pub struct ObjectiveTemplate {
 impl ObjectiveTemplate {
     pub fn new(
         title: String,
+        objective_id: i32,
         theme_id: i32,
         theme_title: String,
         keyresults: Option<Vec<model::KeyResult>>,
@@ -65,12 +67,13 @@ impl ObjectiveTemplate {
         projects: Option<Vec<model::Project>>,
     ) -> ObjectiveTemplate {
         ObjectiveTemplate {
-            title: title,
-            theme_id: theme_id,
-            theme_title: theme_title,
-            keyresults: keyresults,
-            initiatives: initiatives,
-            projects: projects,
+            title,
+            objective_id,
+            theme_id,
+            theme_title,
+            keyresults,
+            initiatives,
+            projects,
         }
     }
 }
@@ -94,8 +97,8 @@ pub struct AllObjectivesTemplate {
 }
 
 impl AllObjectivesTemplate {
-    pub fn new(themes: Option<Vec<model::Objective>>) -> AllObjectivesTemplate {
-        AllObjectivesTemplate { objectives: themes }
+    pub fn new(objectives: Option<Vec<model::Objective>>) -> AllObjectivesTemplate {
+        AllObjectivesTemplate { objectives }
     }
 }
 
@@ -122,6 +125,18 @@ impl KeyResultTemplate {
             objective_title,
             measurements,
         }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "list_keyresults.html")]
+pub struct ListKeyResultsTemplate {
+    pub keyresults: Option<Vec<model::KeyResult>>,
+}
+
+impl ListKeyResultsTemplate {
+    pub fn new(keyresults: Option<Vec<model::KeyResult>>) -> ListKeyResultsTemplate {
+        ListKeyResultsTemplate { keyresults }
     }
 }
 
@@ -153,6 +168,18 @@ impl InitiativeTemplate {
             objective_id,
             objective_title,
         }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "list_initiatives.html")]
+pub struct ListInitiativesTemplate {
+    pub initiatives: Option<Vec<model::Initiative>>,
+}
+
+impl ListInitiativesTemplate {
+    pub fn new(initiatives: Option<Vec<model::Initiative>>) -> ListInitiativesTemplate {
+        ListInitiativesTemplate { initiatives }
     }
 }
 
@@ -191,6 +218,18 @@ impl ProjectTemplate {
             objective_title,
             tasks,
         }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "list_projects.html")]
+pub struct ListProjectsTemplate {
+    pub projects: Option<Vec<model::Project>>,
+}
+
+impl ListProjectsTemplate {
+    pub fn new(projects: Option<Vec<model::Project>>) -> ListProjectsTemplate {
+        ListProjectsTemplate { projects }
     }
 }
 
