@@ -4,48 +4,66 @@ use axum::{routing::get, Router};
 use sqlx::postgres::PgPoolOptions;
 use std::fs;
 use std::net::SocketAddr;
-// use std::net::SocketAddr;
 use tower::ServiceBuilder;
 use tower_http::trace;
 use tracing;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
 pub mod errors;
-pub mod hypermedia_handlers;
+pub mod handlers;
 pub mod model;
 pub mod templater;
 
 fn get_hypermedia_routes() -> Router {
     let hypermedia_router = Router::new()
-        .route("/", get(hypermedia_handlers::get_root))
-        .route("/theme", get(hypermedia_handlers::get_all_themes))
-        .route("/theme/:theme_id", get(hypermedia_handlers::get_theme))
-        .route("/objective", get(hypermedia_handlers::get_all_objectives))
+        .route("/", get(handlers::hypermedia::get_root))
+        .route("/theme", get(handlers::hypermedia::get_all_themes))
+        .route("/theme/:theme_id", get(handlers::hypermedia::get_theme))
+        .route(
+            "/objective",
+            get(handlers::hypermedia::get_all_objectives).post(handlers::hypermedia::add_objective),
+        )
         .route(
             "/objective/:objective_id",
-            get(hypermedia_handlers::get_objective),
+            get(handlers::hypermedia::get_objective),
         )
-        .route("/keyresult", get(hypermedia_handlers::get_all_keyresults))
+        .route("/keyresult", get(handlers::hypermedia::get_all_keyresults))
         .route(
             "/keyresult/:keyresult_id",
-            get(hypermedia_handlers::get_keyresult),
+            get(handlers::hypermedia::get_keyresult),
         )
-        .route("/initiative", get(hypermedia_handlers::get_all_initiatives))
+        .route(
+            "/initiative",
+            get(handlers::hypermedia::get_all_initiatives),
+        )
         .route(
             "/initiative/:initiative_id",
-            get(hypermedia_handlers::get_initiative),
+            get(handlers::hypermedia::get_initiative),
         )
-        .route("/project", get(hypermedia_handlers::get_all_projects))
+        .route("/project", get(handlers::hypermedia::get_all_projects))
         .route(
             "/project/:project_id",
-            get(hypermedia_handlers::get_project),
+            get(handlers::hypermedia::get_project),
         )
-        .route("/task/", get(hypermedia_handlers::get_all_tasks))
-        .route("/task/:task_id", get(hypermedia_handlers::get_task))
+        .route("/task/", get(handlers::hypermedia::get_all_tasks))
+        .route("/task/:task_id", get(handlers::hypermedia::get_task))
         .route(
             "/measure/:measure_id",
-            get(hypermedia_handlers::get_measure),
+            get(handlers::hypermedia::get_measure),
         );
     hypermedia_router
+}
+
+fn get_static_asset_routes() -> Router {
+    let static_assets_router = Router::new()
+        .route("/js/htmx.min.js", get(handlers::assets::htmx_js))
+        .route("/js/json-enc.js", get(handlers::assets::htmx_ext_json_js));
+    static_assets_router
+}
+
+fn get_data_routes() -> Router {
+    let data_router = Router::new();
+    data_router
 }
 
 #[tokio::main]
@@ -75,16 +93,11 @@ async fn main() -> Result<(), String> {
         .await
         .map_err(|err| format!("ERROR: Could not connect to Postgres database: {err}"))?;
 
-    // Routes for HATEOS
-    let hypermedia_routes = get_hypermedia_routes();
-
-    // Routes for Data API
-    let data_routes = Router::new();
-
     // Serve
     let app = Router::new()
-        .nest("/", hypermedia_routes)
-        .nest("/api", data_routes)
+        .nest("/", get_hypermedia_routes())
+        .nest("/api", get_data_routes())
+        .nest("/static", get_static_asset_routes())
         .layer(
             ServiceBuilder::new()
                 .layer(Extension(pool))
