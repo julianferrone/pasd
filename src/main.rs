@@ -20,6 +20,10 @@ fn get_hypermedia_routes() -> Router {
         .route("/theme", get(handlers::hypermedia::get_all_themes))
         .route("/theme/:theme_id", get(handlers::hypermedia::get_theme))
         .route(
+            "/theme/:theme_id/objectives",
+            get(handlers::hypermedia::get_theme_objectives),
+        )
+        .route(
             "/objective",
             get(handlers::hypermedia::get_all_objectives).post(handlers::hypermedia::add_objective),
         )
@@ -119,7 +123,7 @@ async fn main() -> Result<(), String> {
 // TODO:
 // 1) convert into Rust web-server
 // - Front-end: HTMX
-// - Templating: Askana
+// - Templating: Askama
 // - Styling: Tailwind CSS
 // - Back-end: Axum
 // 2) Add undo/redo functionality using Command pattern
