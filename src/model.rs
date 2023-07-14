@@ -9,6 +9,7 @@ pub struct Theme {
     pub theme_status: Status,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateTheme {
     pub title: String,
 }
@@ -25,8 +26,9 @@ pub struct Objective {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateObjective {
-    pub title: String,
+    pub new_title: String,
     pub theme_id: i32,
 }
 
@@ -40,6 +42,7 @@ pub struct KeyResult {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateKeyResult {
     pub title: String,
     pub objective_id: i32,
@@ -56,6 +59,7 @@ pub struct Initiative {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateInitiative {
     pub title: String,
     pub objective_id: i32,
@@ -71,6 +75,7 @@ pub struct Project {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateProject {
     pub title: String,
     pub objective_id: i32,
@@ -86,6 +91,7 @@ pub struct Task {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateTask {
     pub title: String,
     pub project_id: i32,
@@ -100,6 +106,7 @@ pub struct Measurement {
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateMeasurement {
     pub title: String,
     pub keyresult_id: i32,
