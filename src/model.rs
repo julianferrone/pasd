@@ -11,7 +11,7 @@ pub struct Theme {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateTheme {
-    pub title: String,
+    pub new_title: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -44,7 +44,7 @@ pub struct KeyResult {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateKeyResult {
-    pub title: String,
+    pub new_title: String,
     pub objective_id: i32,
 }
 
@@ -61,7 +61,7 @@ pub struct Initiative {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateInitiative {
-    pub title: String,
+    pub new_title: String,
     pub objective_id: i32,
 }
 
@@ -77,7 +77,7 @@ pub struct Project {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateProject {
-    pub title: String,
+    pub new_title: String,
     pub objective_id: i32,
 }
 
@@ -93,7 +93,7 @@ pub struct Task {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateTask {
-    pub title: String,
+    pub new_title: String,
     pub project_id: i32,
 }
 
@@ -108,7 +108,7 @@ pub struct Measurement {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateMeasurement {
-    pub title: String,
+    pub new_title: String,
     pub keyresult_id: i32,
 }
 
