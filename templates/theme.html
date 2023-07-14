@@ -11,23 +11,28 @@
     <h1>Theme: {{ title }}</h1>
     <h2>Status: {{ theme_status }} </h2>
     <h2>Objectives</h2>
-    <div id="response">
-        {% if objectives.is_some() -%}
-        {% let objs = objectives.clone().unwrap() %}
+    <div id="objectives_response">
+        {% match objectives -%}
+        {% when Some with (objectives) %}
+        {% let objectives_len = objectives.len() %}
+        {% if objectives_len > 0 %}
         <ul>
-            {% for objective in objs %}
-            <li><a href="http://localhost:3000/objective/{{ objective.objective_id }}">{{ objective.title }}</a></li>
+            {% for objective in objectives %}
+            <li><a href="http://localhost:3000/objective/{{ objective.objective_id }}">{{ objective.title }}</a>
+            </li>
             {% endfor %}
         </ul>
-        {%- else -%}
+        {% else -%}
         <p>No objectives currently.</p>
-        {%- endif %}
+        {% endif -%}
+        {% when None %}
+        <p>Error when retrieving the objective rows from database.</p>
+        {% endmatch %}
     </div>
 
     <b>Add objective</b>
-    <form hx-post="/objective" hx-target="#response" hx-vals='{"theme_id": {{ theme_id }} }'>
-        <label for="new_title">New objective title:</label>
-        <input type="text" id="new_title" name="new_title"><br>
+    <form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }'>
+        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
         <button type="submit">Create Objective</button>
     </form>
 </body>
