@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
+    <script type="text/javascript" src="/static/js/json-enc.js"></script>
+</head>
+
+<body hx-boost="true" hx-ext="json-enc">
+
+    <h1>Home</h1>
+    <h2>Themes</h2>
+    <div id="themes_response">
+        {% match themes -%}
+        {% when Some with (themes) %}
+        {% let themes_len = themes.len() %}
+        {% if themes_len > 0 %}
+        <ul>
+            {% for theme in themes %}
+            <li><a href="http://localhost:3000/theme/{{ theme.theme_id }}">{{ theme.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else -%}
+        <p>No themes currently.</p>
+        {% endif -%}
+        {% when None %}
+        <p>Error when retrieving the theme rows from database.</p>
+        {% endmatch %}
+    </div>
+
+    <b>Add theme</b>
+    <form hx-post="/theme" hx-target="#themes_response">
+        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+        <button type="submit">Create Theme</button>
+    </form>
+</body>
+
+</html>
