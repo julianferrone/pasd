@@ -1,5 +1,8 @@
 use axum::extract::Extension;
-use axum::{routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 
 use sqlx::postgres::PgPoolOptions;
 use std::fs;
@@ -19,7 +22,7 @@ fn get_hypermedia_routes() -> Router {
         .route("/", get(handlers::hypermedia::get_root))
         .route(
             "/theme",
-            get(handlers::hypermedia::get_all_themes).post(handlers::hypermedia::add_theme),
+            post(handlers::hypermedia::add_theme),
         )
         .route("/theme/:theme_id", get(handlers::hypermedia::get_theme))
         .route(
@@ -28,7 +31,7 @@ fn get_hypermedia_routes() -> Router {
         )
         .route(
             "/objective",
-            get(handlers::hypermedia::get_all_objectives).post(handlers::hypermedia::add_objective),
+            post(handlers::hypermedia::add_objective),
         )
         .route(
             "/objective/:objective_id",
@@ -46,33 +49,24 @@ fn get_hypermedia_routes() -> Router {
             "/objective/:objective_id/projects",
             get(handlers::hypermedia::get_objective_projects),
         )
-        .route(
-            "/keyresult",
-            get(handlers::hypermedia::get_all_keyresults).post(handlers::hypermedia::add_keyresult),
-        )
+        .route("/keyresult", post(handlers::hypermedia::add_keyresult))
         .route(
             "/keyresult/:keyresult_id",
             get(handlers::hypermedia::get_keyresult),
         )
-        .route(
-            "/initiative",
-            get(handlers::hypermedia::get_all_initiatives)
-                .post(handlers::hypermedia::add_initiative),
-        )
+        .route("/initiative", post(handlers::hypermedia::add_initiative))
         .route(
             "/initiative/:initiative_id",
             get(handlers::hypermedia::get_initiative),
         )
-        .route(
-            "/project",
-            get(handlers::hypermedia::get_all_projects).post(handlers::hypermedia::add_project),
-        )
+        .route("/project", post(handlers::hypermedia::add_project))
         .route(
             "/project/:project_id",
             get(handlers::hypermedia::get_project),
         )
-        .route("/task/", get(handlers::hypermedia::get_all_tasks))
+        .route("/task", post(handlers::hypermedia::add_task))
         .route("/task/:task_id", get(handlers::hypermedia::get_task))
+        .route("/measure", post(handlers::hypermedia::add_measure))
         .route(
             "/measure/:measure_id",
             get(handlers::hypermedia::get_measure),
