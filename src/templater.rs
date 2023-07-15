@@ -5,6 +5,19 @@ use axum::{
     response::{Html, IntoResponse},
 };
 
+// ROOT TEMPLATES
+#[derive(askama::Template)]
+#[template(path = "root.html")]
+pub struct RootTemplate {
+    pub themes: Option<Vec<model::Theme>>,
+}
+
+impl RootTemplate {
+    pub fn new(themes: Option<Vec<model::Theme>>) -> RootTemplate {
+        RootTemplate { themes }
+    }
+}
+
 // THEME TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "theme.html")]
