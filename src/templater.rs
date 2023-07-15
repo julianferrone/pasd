@@ -44,6 +44,18 @@ impl ThemeTemplate {
     }
 }
 
+#[derive(askama::Template)]
+#[template(path = "list_themes.html")]
+pub struct ListThemesTemplate {
+    pub themes: Option<Vec<model::Theme>>,
+}
+
+impl ListThemesTemplate {
+    pub fn new(themes: Option<Vec<model::Theme>>) -> ListThemesTemplate {
+        ListThemesTemplate { themes }
+    }
+}
+
 // OBJECTIVE TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "objective.html")]

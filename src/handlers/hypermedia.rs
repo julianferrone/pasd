@@ -29,6 +29,18 @@ pub async fn get_root(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
 // }
 // get_all_from_table!("themes".to_string(), model::Theme);
 
+// GET /theme
+pub async fn get_root_themes(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
+    let sql = "SELECT * from themes".to_string();
+
+    let themes = sqlx::query_as::<_, model::Theme>(&sql)
+        .fetch_all(&pool)
+        .await;
+
+    let template = templater::ListThemesTemplate::new(themes.ok().clone());
+    templater::HtmlTemplate(template).into_response()
+}
+
 // GET /theme/:theme_id
 pub async fn get_theme(
     Extension(pool): Extension<PgPool>,
@@ -357,7 +369,7 @@ pub async fn add_theme(
         .fetch_all(&pool)
         .await;
 
-    Redirect::to("/")
+    Redirect::to("/theme")
 }
 
 // POST /objective
