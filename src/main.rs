@@ -22,17 +22,14 @@ fn get_hypermedia_routes() -> Router {
         .route("/", get(handlers::hypermedia::get_root))
         .route(
             "/theme",
-            post(handlers::hypermedia::add_theme),
+            get(handlers::hypermedia::get_root_themes).post(handlers::hypermedia::add_theme),
         )
         .route("/theme/:theme_id", get(handlers::hypermedia::get_theme))
         .route(
             "/theme/:theme_id/objectives",
             get(handlers::hypermedia::get_theme_objectives),
         )
-        .route(
-            "/objective",
-            post(handlers::hypermedia::add_objective),
-        )
+        .route("/objective", post(handlers::hypermedia::add_objective))
         .route(
             "/objective/:objective_id",
             get(handlers::hypermedia::get_objective),
@@ -82,7 +79,14 @@ fn get_static_asset_routes() -> Router {
 }
 
 fn get_data_routes() -> Router {
-    let data_router = Router::new();
+    let data_router = Router::new()
+        .route("/theme", get(handlers::data::get_all_themes))
+        .route("/objective", get(handlers::data::get_all_objectives))
+        .route("/keyresult", get(handlers::data::get_all_keyresults))
+        .route("/initiative", get(handlers::data::get_all_initiatives))
+        .route("/project", get(handlers::data::get_all_projects))
+        .route("/task", get(handlers::data::get_all_tasks))
+        .route("/measurement", get(handlers::data::get_all_measures));
     data_router
 }
 
