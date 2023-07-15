@@ -1,10 +1,11 @@
-use crate::{model, templater};
+use crate::{errors::CustomError, model, templater};
 use axum::{
     extract,
     http::StatusCode,
     response::{IntoResponse, Redirect},
     Extension,
 };
+use axum_macros::debug_handler;
 use sqlx::PgPool;
 
 // GET /
@@ -515,3 +516,9 @@ pub async fn update_task() {}
 
 // PUT /measure/:measure_id
 pub async fn update_measure() {}
+
+pub async fn error_404_page() -> impl IntoResponse {
+    let (error_code, error_message) = CustomError::BadRequest.get_error_message();
+    let template = templater::ErrorTemplate::new(error_code, error_message);
+    templater::HtmlTemplate(template).into_response()
+}

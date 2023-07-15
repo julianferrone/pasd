@@ -67,7 +67,8 @@ fn get_hypermedia_routes() -> Router {
         .route(
             "/measure/:measure_id",
             get(handlers::hypermedia::get_measure),
-        );
+        )
+        .route("/*path", get(handlers::hypermedia::error_404_page));
     hypermedia_router
 }
 
