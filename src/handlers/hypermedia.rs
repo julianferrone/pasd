@@ -432,7 +432,7 @@ pub async fn add_theme(
         .fetch_all(&pool)
         .await;
 
-    Redirect::to("/theme")
+    Redirect::to("/")
 }
 
 // POST /objective
