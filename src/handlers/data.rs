@@ -4,7 +4,7 @@ use sqlx::PgPool;
 
 use crate::model;
 
-// GET /theme
+// GET /api/theme
 pub async fn get_all_themes(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from themes".to_string();
 
@@ -16,7 +16,7 @@ pub async fn get_all_themes(Extension(pool): Extension<PgPool>) -> impl IntoResp
     (StatusCode::OK, Json(themes))
 }
 
-// GET /objective
+// GET /api/objective
 pub async fn get_all_objectives(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from objectives".to_string();
 
@@ -28,7 +28,7 @@ pub async fn get_all_objectives(Extension(pool): Extension<PgPool>) -> impl Into
     (StatusCode::OK, Json(objectives))
 }
 
-// GET /keyresult
+// GET /api/keyresult
 pub async fn get_all_keyresults(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from keyresults".to_string();
 
@@ -40,7 +40,7 @@ pub async fn get_all_keyresults(Extension(pool): Extension<PgPool>) -> impl Into
     (StatusCode::OK, Json(keyresults))
 }
 
-// GET /initiative
+// GET /api/initiative
 pub async fn get_all_initiatives(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from initiatives".to_string();
 
@@ -52,7 +52,7 @@ pub async fn get_all_initiatives(Extension(pool): Extension<PgPool>) -> impl Int
     (StatusCode::OK, Json(initiatives))
 }
 
-// GET /project
+// GET /api/project
 pub async fn get_all_projects(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from projects".to_string();
 
@@ -64,7 +64,7 @@ pub async fn get_all_projects(Extension(pool): Extension<PgPool>) -> impl IntoRe
     (StatusCode::OK, Json(projects))
 }
 
-// GET /task
+// GET /api/task
 pub async fn get_all_tasks(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from tasks".to_string();
 
@@ -76,7 +76,7 @@ pub async fn get_all_tasks(Extension(pool): Extension<PgPool>) -> impl IntoRespo
     (StatusCode::OK, Json(tasks))
 }
 
-// GET /measurement
+// GET /api/measurement
 pub async fn get_all_measures(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from measures".to_string();
 
