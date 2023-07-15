@@ -3,7 +3,7 @@ use axum::{
     extract,
     http::StatusCode,
     response::{IntoResponse, Redirect},
-    Extension, Json,
+    Extension,
 };
 use sqlx::PgPool;
 
