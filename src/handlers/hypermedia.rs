@@ -8,7 +8,16 @@ use axum::{
 use sqlx::PgPool;
 
 // GET /
-pub async fn get_root() {}
+pub async fn get_root(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
+    let sql = "SELECT * from themes".to_string();
+
+    let themes = sqlx::query_as::<_, model::Theme>(&sql)
+        .fetch_all(&pool)
+        .await;
+
+    let template = templater::RootTemplate::new(themes.ok().clone());
+    templater::HtmlTemplate(template).into_response()
+}
 
 // macro_rules! get_all_from_table{
 //     ($table_name:expr, $struct:item)=>{
@@ -227,7 +236,7 @@ pub async fn get_objective(
     }
 }
 
-// GET /objective/:theme_id/keyresults
+// GET /objective/:objective_id/keyresults
 pub async fn get_objective_keyresults(
     Extension(pool): Extension<PgPool>,
     extract::Path(objective_id): extract::Path<i32>,
@@ -246,7 +255,7 @@ pub async fn get_objective_keyresults(
     templater::HtmlTemplate(template).into_response()
 }
 
-// GET /objective/:theme_id/initiatives
+// GET /objective/:objective_id/initiatives
 pub async fn get_objective_initiatives(
     Extension(pool): Extension<PgPool>,
     extract::Path(objective_id): extract::Path<i32>,
@@ -265,7 +274,7 @@ pub async fn get_objective_initiatives(
     templater::HtmlTemplate(template).into_response()
 }
 
-// GET /objective/:theme_id/projects
+// GET /objective/:objective_id/projects
 pub async fn get_objective_projects(
     Extension(pool): Extension<PgPool>,
     extract::Path(objective_id): extract::Path<i32>,
@@ -274,7 +283,7 @@ pub async fn get_objective_projects(
         r#"SELECT *
         FROM projects
         where projects.objective_id = $1
-        ORDER BY projects.initiative_id;"#,
+        ORDER BY projects.project_id;"#,
     )
     .bind(&objective_id)
     .fetch_all(&pool)
@@ -531,7 +540,7 @@ pub async fn add_measure(
 // DELETE /theme/:theme_id
 pub async fn remove_theme() {}
 
-// DELETE /objective/:objective_id
+// DELETE /
 pub async fn remove_objective() {}
 
 // DELETE /keyresult/:keyresult_id
