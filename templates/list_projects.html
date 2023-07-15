@@ -1,10 +1,10 @@
 <div id="projects_response">
     {% match projects -%}
-    {% when Some with (projs) %}
-    {% let projs_len = projs.len() %}
-    {% if projs_len > 0 %}
+    {% when Some with (projects) %}
+    {% let projects_len = projects.len() %}
+    {% if projects_len > 0 %}
     <ul>
-        {% for project in projs %}
+        {% for project in projects %}
         <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a>
         </li>
         {% endfor %}

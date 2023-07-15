@@ -1,10 +1,10 @@
 <div id="themes_response">
     {% match themes -%}
-    {% when Some with (thms) %}
-    {% let thms_len = thms.len() %}
-    {% if thms_len > 0 %}
+    {% when Some with (themes) %}
+    {% let themes_len = themes.len() %}
+    {% if themes_len > 0 %}
     <ul>
-        {% for theme in thms %}
+        {% for theme in themes %}
         <li><a href="http://localhost:3000/theme/{{ theme.theme_id }}">{{ theme.title }}</a>
         </li>
         {% endfor %}
