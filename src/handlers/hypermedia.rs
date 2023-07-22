@@ -5,7 +5,6 @@ use axum::{
     response::{IntoResponse, Redirect},
     Extension,
 };
-use axum_macros::debug_handler;
 use sqlx::PgPool;
 
 // GET /
@@ -38,7 +37,7 @@ pub async fn get_root_themes(Extension(pool): Extension<PgPool>) -> impl IntoRes
         .fetch_all(&pool)
         .await;
 
-    let template = templater::ListThemesTemplate::new(themes.ok().clone());
+    let template = templater::TableThemesTemplate::new(themes.ok().clone());
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -82,6 +81,12 @@ pub async fn get_theme(
     }
 }
 
+// GET /theme/:theme_id/row
+pub async fn get_theme_row() {}
+
+// GET /theme/:theme_id/form
+pub async fn get_theme_form() {}
+
 // GET /theme/:theme_id/objectives
 pub async fn get_theme_objectives(
     Extension(pool): Extension<PgPool>,
@@ -97,7 +102,7 @@ pub async fn get_theme_objectives(
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::ListObjectivesTemplate::new(objectives.clone());
+    let template = templater::TableObjectivesTemplate::new(objectives.clone(), theme_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -174,6 +179,12 @@ pub async fn get_objective(
     }
 }
 
+// GET /objective/:objective_id/row
+pub async fn get_objective_row() {}
+
+// GET /objective/:objective_id/form
+pub async fn get_objective_form() {}
+
 // GET /objective/:objective_id/keyresults
 pub async fn get_objective_keyresults(
     Extension(pool): Extension<PgPool>,
@@ -189,7 +200,7 @@ pub async fn get_objective_keyresults(
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::ListKeyResultsTemplate::new(keyresults.clone());
+    let template = templater::TableKeyResultsTemplate::new(keyresults.clone(), objective_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -208,7 +219,7 @@ pub async fn get_objective_initiatives(
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::ListInitiativesTemplate::new(initiatives.clone());
+    let template = templater::TableInitiativesTemplate::new(initiatives.clone(), objective_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -227,7 +238,7 @@ pub async fn get_objective_projects(
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::ListProjectsTemplate::new(projects.clone());
+    let template = templater::TableProjectsTemplate::new(projects.clone(), objective_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -280,6 +291,14 @@ pub async fn get_keyresult(
     }
 }
 
+// GET /keyresult/:keyresult_id/row
+pub async fn get_keyresult_row() {}
+
+// GET /keyresult/:keyresult_id/form
+pub async fn get_keyresult_form() {}
+
+pub async fn get_keyresult_measurements() {}
+
 // GET /initiative/:initiative_id
 pub async fn get_initiative(
     Extension(pool): Extension<PgPool>,
@@ -317,6 +336,12 @@ pub async fn get_initiative(
     }
 }
 
+// GET /initiative/:initiative_id/row
+pub async fn get_initiative_row() {}
+
+// GET /initiative/:initiative_id/form
+pub async fn get_initiative_form() {}
+
 // GET /project/:project_id
 pub async fn get_project(
     Extension(pool): Extension<PgPool>,
@@ -337,9 +362,67 @@ pub async fn get_project(
 
     match project_row {
         Ok(project) => {
-            let template = templater::InitiativeTemplate::new(
+            let tasks: Option<Vec<model::Task>> = sqlx::query_as(
+                r#"SELECT *
+                FROM tasks
+                WHERE tasks.project_id = $1
+                ORDER BY tasks.task_id;"#,
+            )
+            .bind(&project_id)
+            .fetch_all(&pool)
+            .await
+            .ok();
+
+            let template = templater::ProjectTemplate::new(
                 project.title,
                 project.objective_id,
+                project.objective_title,
+                tasks,
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Key Result Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
+
+// GET /project/:project_id/row
+pub async fn get_project_row() {}
+
+// GET /project/:project_id/form
+pub async fn get_project_form() {}
+
+// GET /project/:project_id/tasks
+pub async fn get_project_tasks() {}
+
+// GET /task/:task_id
+pub async fn get_task(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(task_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let project_row = sqlx::query!(
+        r#"
+        SELECT tasks.title, projects.project_id, projects.title as objective_title 
+        FROM tasks
+        LEFT JOIN projects 
+        ON tasks.project_id = projects.project_id 
+        WHERE tasks.task_id = $1;
+        "#,
+        task_id
+    )
+    .fetch_one(&pool)
+    .await;
+
+    match project_row {
+        Ok(project) => {
+            let template = templater::InitiativeTemplate::new(
+                project.title,
+                project.project_id,
                 project.objective_title,
             );
             templater::HtmlTemplate(template).into_response()
@@ -354,11 +437,27 @@ pub async fn get_project(
     }
 }
 
-// GET /task/:task_id
-pub async fn get_task() {}
+// GET /task/:task_id/row
+pub async fn get_task_row() {}
+
+// GET /task/:task_id/form
+pub async fn get_task_form() {}
 
 // GET /measure/:measure_id
 pub async fn get_measure() {}
+
+// GET /measurement/:measurement_id/row
+pub async fn get_measure_row() {}
+
+// GET /measurement/:measurement_id/form
+pub async fn get_measure_form() {}
+
+// For non-existent routes
+pub async fn get_error_404_page() -> impl IntoResponse {
+    let (error_code, error_message) = CustomError::BadRequest.get_error_message();
+    let template = templater::ErrorTemplate::new(error_code, error_message);
+    templater::HtmlTemplate(template).into_response()
+}
 
 // POST /theme
 pub async fn add_theme(
@@ -366,11 +465,11 @@ pub async fn add_theme(
     extract::Json(create_theme): extract::Json<model::CreateTheme>,
 ) -> Redirect {
     let _ = sqlx::query(r#"INSERT INTO themes (title) VALUES ($1);"#)
-        .bind(create_theme.new_title)
+        .bind(create_theme.title)
         .fetch_all(&pool)
         .await;
 
-    Redirect::to("/theme")
+    Redirect::to("/")
 }
 
 // POST /objective
@@ -379,7 +478,7 @@ pub async fn add_objective(
     extract::Json(create_objective): extract::Json<model::CreateObjective>,
 ) -> impl IntoResponse {
     let _ = sqlx::query(r#"INSERT INTO objectives (title, theme_id) VALUES ($1, $2);"#)
-        .bind(create_objective.new_title)
+        .bind(create_objective.title)
         .bind(create_objective.theme_id)
         .fetch_all(&pool)
         .await;
@@ -396,7 +495,7 @@ pub async fn add_keyresult(
     extract::Json(create_keyresult): extract::Json<model::CreateKeyResult>,
 ) -> Redirect {
     let _ = sqlx::query(r#"INSERT INTO keyresults (title, objective_id) VALUES ($1, $2);"#)
-        .bind(create_keyresult.new_title)
+        .bind(create_keyresult.title)
         .bind(create_keyresult.objective_id)
         .fetch_all(&pool)
         .await;
@@ -413,7 +512,7 @@ pub async fn add_initiative(
     extract::Json(create_initiative): extract::Json<model::CreateInitiative>,
 ) -> Redirect {
     let _ = sqlx::query(r#"INSERT INTO initiatives (title, objective_id) VALUES ($1, $2);"#)
-        .bind(create_initiative.new_title)
+        .bind(create_initiative.title)
         .bind(create_initiative.objective_id)
         .fetch_all(&pool)
         .await;
@@ -430,7 +529,7 @@ pub async fn add_project(
     extract::Json(create_project): extract::Json<model::CreateProject>,
 ) -> Redirect {
     let _ = sqlx::query(r#"INSERT INTO projects (title, objective_id) VALUES ($1, $2);"#)
-        .bind(create_project.new_title)
+        .bind(create_project.title)
         .bind(create_project.objective_id)
         .fetch_all(&pool)
         .await;
@@ -447,7 +546,7 @@ pub async fn add_task(
     extract::Json(create_task): extract::Json<model::CreateTask>,
 ) -> Redirect {
     let _ = sqlx::query(r#"INSERT INTO tasks (title, project_id) VALUES ($1, $2);"#)
-        .bind(create_task.new_title)
+        .bind(create_task.title)
         .bind(create_task.project_id)
         .fetch_all(&pool)
         .await;
@@ -464,7 +563,7 @@ pub async fn add_measure(
     extract::Json(create_measurement): extract::Json<model::CreateMeasurement>,
 ) -> Redirect {
     let _ = sqlx::query(r#"INSERT INTO measurements (title, keyresult_id) VALUES ($1, $2);"#)
-        .bind(create_measurement.new_title)
+        .bind(create_measurement.title)
         .bind(create_measurement.keyresult_id)
         .fetch_all(&pool)
         .await;
@@ -475,50 +574,137 @@ pub async fn add_measure(
     Redirect::to(&uri)
 }
 
-// DELETE /theme/:theme_id
-pub async fn remove_theme() {}
+// DELETE /:resource/:resource_id
+pub async fn remove_resource(
+    Extension(pool): Extension<PgPool>,
+    extract::Path((resource, resource_id)): extract::Path<(String, i32)>,
+) {
+    let (table, id_name) = match resource.as_str() {
+        "theme" => ("themes", "theme_id"),
+        "objective" => ("objectives", "objective_id"),
+        "keyresult" => ("keyresults", "keyresult_id"),
+        "initiative" => ("initiatives", "initiative_id"),
+        "project" => ("projects", "project_id"),
+        "task" => ("tasks", "task_id"),
+        "measure" => ("measurements", "measurement_id"),
+        _ => ("error", ""),
+    };
+    let _ = sqlx::query(r#"DELETE FROM $1 WHERE $2 = $3"#)
+        .bind(table)
+        .bind(id_name)
+        .bind(resource_id)
+        .fetch_all(&pool)
+        .await;
 
-// DELETE /
-pub async fn remove_objective() {}
-
-// DELETE /keyresult/:keyresult_id
-pub async fn remove_keyresult() {}
-
-// DELETE /initiative/:initiative_id
-pub async fn remove_initiative() {}
-
-// DELETE /project/:project_id
-pub async fn remove_project() {}
-
-// DELETE /task/:task_id
-pub async fn remove_task() {}
-
-// DELETE /measure/:measure_id
-pub async fn remove_measure() {}
+}
 
 // PUT /theme/:theme_id
-pub async fn update_theme() {}
+pub async fn update_theme(
+    Extension(pool): Extension<PgPool>,
+    extract::Json(update_theme): extract::Json<model::UpdateTheme>,
+    extract::Path(theme_id): extract::Path<i32>,
+) -> Redirect {
+    let _ = sqlx::query(r#"UPDATE themes SET title=$1, theme_status=$2 WHERE theme_id=$3"#)
+        .bind(update_theme.title)
+        .bind(update_theme.status)
+        .bind(theme_id)
+        .fetch_all(&pool)
+        .await;
+    let uri = format!("/theme/{theme_id}/row");
+    Redirect::to(&uri)
+}
 
 // PUT /objective/:objective_id
-pub async fn update_objective() {}
+pub async fn update_objective(
+    Extension(pool): Extension<PgPool>,
+    extract::Json(update_objective): extract::Json<model::UpdateObjective>,
+    extract::Path(objective_id): extract::Path<i32>,
+) -> Redirect {
+    let _ = sqlx::query(r#"UPDATE objectives SET title=$1 WHERE objective_id=$2"#)
+        .bind(update_objective.title)
+        .bind(objective_id)
+        .fetch_all(&pool)
+        .await;
+    let uri = format!("/objective/{objective_id}/row");
+    Redirect::to(&uri)
+}
 
 // PUT /keyresult/:keyresult_id
-pub async fn update_keyresult() {}
+pub async fn update_keyresult(
+    Extension(pool): Extension<PgPool>,
+    extract::Json(update_keyresult): extract::Json<model::UpdateKeyResult>,
+    extract::Path(keyresult_id): extract::Path<i32>,
+) -> Redirect {
+    let _ = sqlx::query(r#"UPDATE keyresults SET title=$1 WHERE keyresult_id=$2"#)
+        .bind(update_keyresult.title)
+        .bind(keyresult_id)
+        .fetch_all(&pool)
+        .await;
+    let uri = format!("/keyresult/{keyresult_id}/row");
+    Redirect::to(&uri)
+}
 
 // PUT /initiative/:initiative_id
-pub async fn update_initiative() {}
+pub async fn update_initiative(
+    Extension(pool): Extension<PgPool>,
+    extract::Json(update_initiative): extract::Json<model::UpdateInitiative>,
+    extract::Path(initiative_id): extract::Path<i32>,
+) -> Redirect {
+    let _ = sqlx::query(
+        r#"UPDATE initiatives SET title=$1, initiative_status=$2 WHERE initiative_id=$3"#,
+    )
+    .bind(update_initiative.title)
+    .bind(update_initiative.initiative_status)
+    .bind(initiative_id)
+    .fetch_all(&pool)
+    .await;
+    let uri = format!("/initiative/{initiative_id}/row");
+    Redirect::to(&uri)
+}
 
 // PUT /project/:project_id
-pub async fn update_project() {}
+pub async fn update_project(
+    Extension(pool): Extension<PgPool>,
+    extract::Json(update_project): extract::Json<model::UpdateProject>,
+    extract::Path(project_id): extract::Path<i32>,
+) -> Redirect {
+    let _ = sqlx::query(r#"UPDATE projects SET title=$1, project_status=$2 WHERE project_id=$3"#)
+        .bind(update_project.title)
+        .bind(update_project.project_status)
+        .bind(project_id)
+        .fetch_all(&pool)
+        .await;
+    let uri = format!("/project/{project_id}/row");
+    Redirect::to(&uri)
+}
 
 // PUT /task/:task_id
-pub async fn update_task() {}
+pub async fn update_task(
+    Extension(pool): Extension<PgPool>,
+    extract::Json(update_task): extract::Json<model::UpdateTask>,
+    extract::Path(task_id): extract::Path<i32>,
+) -> Redirect {
+    let _ = sqlx::query(r#"UPDATE tasks SET title=$1, task_status=$2 WHERE project_id=$3"#)
+        .bind(update_task.title)
+        .bind(update_task.task_status)
+        .bind(task_id)
+        .fetch_all(&pool)
+        .await;
+    let uri = format!("/task/{task_id}/row");
+    Redirect::to(&uri)
+}
 
 // PUT /measure/:measure_id
-pub async fn update_measure() {}
-
-pub async fn error_404_page() -> impl IntoResponse {
-    let (error_code, error_message) = CustomError::BadRequest.get_error_message();
-    let template = templater::ErrorTemplate::new(error_code, error_message);
-    templater::HtmlTemplate(template).into_response()
+pub async fn update_measure(
+    Extension(pool): Extension<PgPool>,
+    extract::Json(update_measure): extract::Json<model::UpdateMeasurement>,
+    extract::Path(measure_id): extract::Path<i32>,
+) -> Redirect {
+    let _ = sqlx::query(r#"UPDATE measurements SET title=$1 WHERE measurement_id=$2"#)
+        .bind(update_measure.title)
+        .bind(measure_id)
+        .fetch_all(&pool)
+        .await;
+    let uri = format!("/measure/{measure_id}/row");
+    Redirect::to(&uri)
 }
