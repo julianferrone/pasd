@@ -10,12 +10,7 @@
 
     <h1>Home</h1>
     <h2>Themes</h2>
-    {% include "list_themes.html" %}
-    <b>Add theme</b>
-    <form hx-post="/theme" hx-target="#themes_response">
-        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
-        <button type="submit">Create Theme</button>
-    </form>
+    {% include "table/themes.html" %}
 </body>
 
 </html>

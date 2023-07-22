@@ -7,7 +7,7 @@ use axum::{
 
 // ROOT TEMPLATES
 #[derive(askama::Template)]
-#[template(path = "root.html")]
+#[template(path = "page/root.html")]
 pub struct RootTemplate {
     pub themes: Option<Vec<model::Theme>>,
 }
@@ -20,7 +20,7 @@ impl RootTemplate {
 
 // THEME TEMPLATES
 #[derive(askama::Template)]
-#[template(path = "theme.html")]
+#[template(path = "page/theme.html")]
 pub struct ThemeTemplate {
     pub title: String,
     pub theme_id: i32,
@@ -45,20 +45,20 @@ impl ThemeTemplate {
 }
 
 #[derive(askama::Template)]
-#[template(path = "list_themes.html")]
-pub struct ListThemesTemplate {
+#[template(path = "table/themes.html")]
+pub struct TableThemesTemplate {
     pub themes: Option<Vec<model::Theme>>,
 }
 
-impl ListThemesTemplate {
-    pub fn new(themes: Option<Vec<model::Theme>>) -> ListThemesTemplate {
-        ListThemesTemplate { themes }
+impl TableThemesTemplate {
+    pub fn new(themes: Option<Vec<model::Theme>>) -> TableThemesTemplate {
+        TableThemesTemplate { themes }
     }
 }
 
 // OBJECTIVE TEMPLATES
 #[derive(askama::Template)]
-#[template(path = "objective.html")]
+#[template(path = "page/objective.html")]
 pub struct ObjectiveTemplate {
     pub title: String,
     pub objective_id: i32,
@@ -92,20 +92,24 @@ impl ObjectiveTemplate {
 }
 
 #[derive(askama::Template)]
-#[template(path = "list_objectives.html")]
-pub struct ListObjectivesTemplate {
+#[template(path = "table/objectives.html")]
+pub struct TableObjectivesTemplate {
     pub objectives: Option<Vec<model::Objective>>,
+    pub theme_id: i32,
 }
 
-impl ListObjectivesTemplate {
-    pub fn new(themes: Option<Vec<model::Objective>>) -> ListObjectivesTemplate {
-        ListObjectivesTemplate { objectives: themes }
+impl TableObjectivesTemplate {
+    pub fn new(objectives: Option<Vec<model::Objective>>, theme_id: i32) -> TableObjectivesTemplate {
+        TableObjectivesTemplate {
+            objectives,
+            theme_id,
+        }
     }
 }
 
 // KEY RESULT TEMPLATES
 #[derive(askama::Template)]
-#[template(path = "keyresult.html")]
+#[template(path = "page/keyresult.html")]
 pub struct KeyResultTemplate {
     pub title: String,
     pub objective_id: i32,
@@ -130,20 +134,27 @@ impl KeyResultTemplate {
 }
 
 #[derive(askama::Template)]
-#[template(path = "list_keyresults.html")]
-pub struct ListKeyResultsTemplate {
+#[template(path = "table/keyresults.html")]
+pub struct TableKeyResultsTemplate {
     pub keyresults: Option<Vec<model::KeyResult>>,
+    pub objective_id: i32,
 }
 
-impl ListKeyResultsTemplate {
-    pub fn new(keyresults: Option<Vec<model::KeyResult>>) -> ListKeyResultsTemplate {
-        ListKeyResultsTemplate { keyresults }
+impl TableKeyResultsTemplate {
+    pub fn new(
+        keyresults: Option<Vec<model::KeyResult>>,
+        objective_id: i32,
+    ) -> TableKeyResultsTemplate {
+        TableKeyResultsTemplate {
+            keyresults,
+            objective_id,
+        }
     }
 }
 
 // INITIATIVE TEMPLATES
 #[derive(askama::Template)]
-#[template(path = "initiative.html")]
+#[template(path = "page/initiative.html")]
 pub struct InitiativeTemplate {
     pub title: String,
     pub objective_id: i32,
@@ -161,20 +172,27 @@ impl InitiativeTemplate {
 }
 
 #[derive(askama::Template)]
-#[template(path = "list_initiatives.html")]
-pub struct ListInitiativesTemplate {
+#[template(path = "table/initiatives.html")]
+pub struct TableInitiativesTemplate {
     pub initiatives: Option<Vec<model::Initiative>>,
+    pub objective_id: i32,
 }
 
-impl ListInitiativesTemplate {
-    pub fn new(initiatives: Option<Vec<model::Initiative>>) -> ListInitiativesTemplate {
-        ListInitiativesTemplate { initiatives }
+impl TableInitiativesTemplate {
+    pub fn new(
+        initiatives: Option<Vec<model::Initiative>>,
+        objective_id: i32,
+    ) -> TableInitiativesTemplate {
+        TableInitiativesTemplate {
+            initiatives,
+            objective_id,
+        }
     }
 }
 
 // PROJECT TEMPLATES
 #[derive(askama::Template)]
-#[template(path = "project.html")]
+#[template(path = "page/project.html")]
 pub struct ProjectTemplate {
     pub title: String,
     pub objective_id: i32,
@@ -199,19 +217,23 @@ impl ProjectTemplate {
 }
 
 #[derive(askama::Template)]
-#[template(path = "list_projects.html")]
-pub struct ListProjectsTemplate {
+#[template(path = "table/projects.html")]
+pub struct TableProjectsTemplate {
     pub projects: Option<Vec<model::Project>>,
+    pub objective_id: i32,
 }
 
-impl ListProjectsTemplate {
-    pub fn new(projects: Option<Vec<model::Project>>) -> ListProjectsTemplate {
-        ListProjectsTemplate { projects }
+impl TableProjectsTemplate {
+    pub fn new(projects: Option<Vec<model::Project>>, objective_id: i32) -> TableProjectsTemplate {
+        TableProjectsTemplate {
+            projects,
+            objective_id,
+        }
     }
 }
 
 #[derive(askama::Template)]
-#[template(path = "error.html")]
+#[template(path = "page/error.html")]
 pub struct ErrorTemplate {
     pub error_code: StatusCode,
     pub error_message: String,

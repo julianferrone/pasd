@@ -4,6 +4,7 @@
 <head>
     <script type="text/javascript" src="/static/js/htmx.min.js"></script>
     <script type="text/javascript" src="/static/js/json-enc.js"></script>
+    <script type="text/javascript" src="/static/js/hyperscript.min.js"></script>
 </head>
 
 <body hx-boost="true" hx-ext="json-enc">
@@ -11,12 +12,7 @@
     <h1>Theme: {{ title }}</h1>
     <h2>Status: {{ theme_status }} </h2>
     <h2>Objectives</h2>
-    {% include "list_objectives.html" %}
-    <b>Add objective</b>
-    <form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }'>
-        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
-        <button type="submit">Create Objective</button>
-    </form>
+    {% include "table/objectives.html" %}
 </body>
 
 </html>

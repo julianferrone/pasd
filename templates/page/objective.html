@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
+    <script type="text/javascript" src="/static/js/json-enc.js"></script>
+    <script type="text/javascript" src="/static/js/hyperscript.min.js"></script>
+</head>
+
+<body hx-boost="true" hx-ext="json-enc">
+
+    <h1>Objective: {{ title }}</h1>
+    <h2>Theme: <a href="http://localhost:3000/theme/{{ theme_id }}"> {{ theme_title }}</a> </h2>
+
+    <h2>Key Results</h2>
+    {% include "table/keyresults.html" %}
+
+    <h2>Initiatives</h2>
+    {% include "table/initiatives.html" %}
+
+    <h2>Projects</h2>
+    {% include "table/projects.html" %}
+</body>
+</html>

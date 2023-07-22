@@ -16,3 +16,8 @@
     <p>Error when retrieving the project rows from database.</p>
     {% endmatch %}
 </div>
+<h3>Add project</h3>
+<form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+    <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+    <button type="submit">Create Project</button>
+</form>
