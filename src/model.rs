@@ -11,7 +11,13 @@ pub struct Theme {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateTheme {
-    pub new_title: String,
+    pub title: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
+pub struct UpdateTheme {
+    pub title: String,
+    pub status: Status,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -28,8 +34,13 @@ pub struct Objective {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateObjective {
-    pub new_title: String,
+    pub title: String,
     pub theme_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
+pub struct UpdateObjective {
+    pub title: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -44,8 +55,13 @@ pub struct KeyResult {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateKeyResult {
-    pub new_title: String,
+    pub title: String,
     pub objective_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
+pub struct UpdateKeyResult {
+    pub title: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -61,8 +77,14 @@ pub struct Initiative {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateInitiative {
-    pub new_title: String,
+    pub title: String,
     pub objective_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
+pub struct UpdateInitiative {
+    pub title: String,
+    pub initiative_status: Status,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -77,8 +99,14 @@ pub struct Project {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateProject {
-    pub new_title: String,
+    pub title: String,
     pub objective_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
+pub struct UpdateProject {
+    pub title: String,
+    pub project_status: Status
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -93,8 +121,14 @@ pub struct Task {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateTask {
-    pub new_title: String,
+    pub title: String,
     pub project_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
+pub struct UpdateTask {
+    pub title: String,
+    pub task_status: Status
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -108,8 +142,13 @@ pub struct Measurement {
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct CreateMeasurement {
-    pub new_title: String,
+    pub title: String,
     pub keyresult_id: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
+pub struct UpdateMeasurement {
+    pub title: String,
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize, Deserialize, sqlx::Type)]
