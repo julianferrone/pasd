@@ -11,7 +11,7 @@ use mime::{
 // const FAVICON: &str = include_str!("../../static/image/favicon.ico");
 const HTMX: &str = include_str!("../../static/js/htmx.min.js");
 const HTMX_EXT_JSON: &str = include_str!("../../static/js/json-enc.js");
-
+const HYPERSCRIPT: &str = include_str!("../../static/js/hyperscript.min.js");
 
 async fn asset(source: &'static [u8], ty: &'static str) -> impl IntoResponse {
     let mut headermap = HeaderMap::new();
@@ -35,6 +35,10 @@ pub async fn htmx_js() -> impl IntoResponse {
 
 pub async fn htmx_ext_json_js() -> impl IntoResponse {
     js(HTMX_EXT_JSON).await
+}
+
+pub async fn hyperscript_js() -> impl IntoResponse {
+    js(HYPERSCRIPT).await
 }
 
 // pub async fn favicon() -> impl IntoResponse {
