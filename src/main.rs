@@ -29,6 +29,14 @@ fn get_hypermedia_routes() -> Router {
             "/theme/:theme_id/objectives",
             get(handlers::hypermedia::get_theme_objectives),
         )
+        .route(
+            "/theme/:theme_id/row",
+            get(handlers::hypermedia::get_theme_row),
+        )
+        .route(
+            "/theme/:theme_id/form",
+            get(handlers::hypermedia::get_theme_form),
+        )
         .route("/objective", post(handlers::hypermedia::add_objective))
         .route(
             "/objective/:objective_id",
@@ -46,36 +54,88 @@ fn get_hypermedia_routes() -> Router {
             "/objective/:objective_id/projects",
             get(handlers::hypermedia::get_objective_projects),
         )
+        .route(
+            "/objective/:objective_id/row",
+            get(handlers::hypermedia::get_objective_row),
+        )
+        .route(
+            "/objective/:objective_id/form",
+            get(handlers::hypermedia::get_objective_form),
+        )
         .route("/keyresult", post(handlers::hypermedia::add_keyresult))
         .route(
             "/keyresult/:keyresult_id",
             get(handlers::hypermedia::get_keyresult),
+        )
+        .route(
+            "/keyresult/:keyresult_id/row",
+            get(handlers::hypermedia::get_keyresult_row),
+        )
+        .route(
+            "/keyresult/:keyresult_id/form",
+            get(handlers::hypermedia::get_keyresult_form),
         )
         .route("/initiative", post(handlers::hypermedia::add_initiative))
         .route(
             "/initiative/:initiative_id",
             get(handlers::hypermedia::get_initiative),
         )
+        .route(
+            "/initiative/:initiative_id/row",
+            get(handlers::hypermedia::get_initiative_row),
+        )
+        .route(
+            "/initiative/:initiative_id/form",
+            get(handlers::hypermedia::get_initiative_form),
+        )
         .route("/project", post(handlers::hypermedia::add_project))
         .route(
             "/project/:project_id",
             get(handlers::hypermedia::get_project),
         )
+        .route(
+            "/project/:project_id/row",
+            get(handlers::hypermedia::get_project_row),
+        )
+        .route(
+            "/project/:project_id/form",
+            get(handlers::hypermedia::get_project_form),
+        )
         .route("/task", post(handlers::hypermedia::add_task))
         .route("/task/:task_id", get(handlers::hypermedia::get_task))
+        .route(
+            "/task/:task_id/row",
+            get(handlers::hypermedia::get_task_row),
+        )
+        .route(
+            "/task/:task_id/form",
+            get(handlers::hypermedia::get_task_form),
+        )
         .route("/measure", post(handlers::hypermedia::add_measure))
         .route(
             "/measure/:measure_id",
             get(handlers::hypermedia::get_measure),
         )
-        .route("/*path", get(handlers::hypermedia::error_404_page));
+        .route(
+            "/measure/:measure_id/row",
+            get(handlers::hypermedia::get_measure_row),
+        )
+        .route(
+            "/measure/:measure_id/form",
+            get(handlers::hypermedia::get_measure_form),
+        )
+        .route("/*path", get(handlers::hypermedia::get_error_404_page));
     hypermedia_router
 }
 
 fn get_static_asset_routes() -> Router {
     let static_assets_router = Router::new()
         .route("/js/htmx.min.js", get(handlers::assets::htmx_js))
-        .route("/js/json-enc.js", get(handlers::assets::htmx_ext_json_js));
+        .route("/js/json-enc.js", get(handlers::assets::htmx_ext_json_js))
+        .route(
+            "/js/hyperscript.min.js",
+            get(handlers::assets::hyperscript_js),
+        );
     static_assets_router
 }
 
@@ -140,11 +200,3 @@ async fn main() -> Result<(), String> {
 
     Ok(())
 }
-
-// TODO:
-// 1) convert into Rust web-server
-// - Front-end: HTMX
-// - Templating: Askama
-// - Styling: Tailwind CSS
-// - Back-end: Axum
-// 2) Add undo/redo functionality using Command pattern
