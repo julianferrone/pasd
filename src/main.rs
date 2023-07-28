@@ -1,6 +1,7 @@
 use axum::extract::Extension;
+// use axum::http::{StatusCode, Uri};
 use axum::{
-    routing::{get, post},
+    routing::{delete, get, post},
     Router,
 };
 
@@ -124,7 +125,10 @@ fn get_hypermedia_routes() -> Router {
             "/measure/:measure_id/form",
             get(handlers::hypermedia::get_measure_form),
         )
-        .route("/*path", get(handlers::hypermedia::get_error_404_page));
+        .route(
+            "/:resource/:resource_id",
+            delete(handlers::hypermedia::remove_resource),
+        );
     hypermedia_router
 }
 
@@ -150,6 +154,10 @@ fn get_data_routes() -> Router {
         .route("/measurement", get(handlers::data::get_all_measures));
     data_router
 }
+
+// async fn fallback(uri: Uri) -> (StatusCode, String) {
+//     (StatusCode::NOT_FOUND, format!("No route for {}", uri))
+// }
 
 #[tokio::main]
 async fn main() -> Result<(), String> {
@@ -183,6 +191,7 @@ async fn main() -> Result<(), String> {
         .nest("/", get_hypermedia_routes())
         .nest("/api", get_data_routes())
         .nest("/static", get_static_asset_routes())
+        // .fallback(handlers::hypermedia::get_error_404_page)
         .layer(
             ServiceBuilder::new()
                 .layer(Extension(pool))
