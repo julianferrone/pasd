@@ -1,7 +1,11 @@
 <tr>
-    <td><a hx-boost="false" href="/measurement/{{ measurement.measurement_id }}">{{ measurement.measurement }}</a></td>
-    <td>
-      <button class="btn btn-danger" hx-get="/measurement/{{ measurement.measurement_id }}/form" hx-trigger="edit" _="on click
+  <td>
+    <div hx-boost="false">
+      <a href="/measurement/{{ measurement.measurement_id }}">{{ measurement.measurement }}</a>
+    </div>
+  </td>
+  <td>
+    <button class="btn btn-danger" hx-get="/measurement/{{ measurement.measurement_id }}/form" hx-trigger="edit" _="on click
                        if .editing is not empty
                          Swal.fire({title: 'Already Editing',
                                     showCancelButton: true,
@@ -13,12 +17,12 @@
                          send cancel to .editing
                        end
                        trigger edit">
-        Edit
-      </button>
-    </td>
-    <td>
-      <button class="btn btn-danger" hx-delete="/measurement/{{ measurement.measurement_id }}">
-        Delete
-      </button>
-    </td>
-  </tr>
+      Edit
+    </button>
+  </td>
+  <td>
+    <button class="btn btn-danger" hx-delete="/measurement/{{ measurement.measurement_id }}">
+      Delete
+    </button>
+  </td>
+</tr>
