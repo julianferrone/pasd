@@ -1,5 +1,19 @@
 <tr>
-  <td><a hx-boost="false" href="/theme/{{ theme.theme_id }}">{{ theme.title }}</a></td>
+  <td>
+    <div hx-boost="false">
+      <a href="/theme/{{ theme.theme_id }}">{{ theme.title }}</a>
+    </div>
+  </td>
+  <td>
+    {% match theme.theme_status %}
+    {% when Status::NotStarted %}
+    <span class="not_started">Not Started</span>
+    {% when Status::InProgress %}
+    <span class="in_progress">In Progress</span>
+    {% when Status::Completed %}
+    <span class="completed">Completed</span>
+    {% endmatch %}
+  </td>
   <td>
     <button class="btn btn-danger" hx-get="/theme/{{ theme.theme_id }}/form" hx-trigger="edit" _="on click
                      if .editing is not empty
