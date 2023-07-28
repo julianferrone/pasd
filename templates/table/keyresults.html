@@ -1,21 +1,27 @@
 <div id="keyresults_response">
-    {% match keyresults %}
+    {% match keyresults -%}
     {% when Some with (keyresults) %}
     {% let keyresults_len = keyresults.len() %}
     {% if keyresults_len > 0 %}
-    <ul>
-        {% for keyresult in keyresults %}
-        <li><a href="http://localhost:3000/keyresult/{{ keyresult.keyresult_id }}">{{ keyresult.title }}</a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
+    <table>
+        <thead>
+            <th>Key Result</th>
+            <th>Actions</th>
+        </thead>
+        <tbody hx-target="closest tr" hx-swap="outerHTML">
+            {% for keyresult in keyresults %}
+            {% include "row/keyresult.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else -%}
     <p>No key results currently.</p>
-    {% endif %}
+    {% endif -%}
     {% when None %}
     <p>Error when retrieving the key result rows from database.</p>
     {% endmatch %}
 </div>
+<br>
 <h3>Add key result</h3>
 <form hx-post="/keyresult" hx-target="#keyresults_response" hx-vals='{"objective_id": {{ objective_id }} }'>
     <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
