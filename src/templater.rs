@@ -56,6 +56,30 @@ impl TableThemesTemplate {
     }
 }
 
+#[derive(askama::Template)]
+#[template(path = "row/theme.html")]
+pub struct RowThemeTemplate {
+    pub theme: model::Theme,
+}
+
+impl RowThemeTemplate {
+    pub fn new(theme: model::Theme) -> RowThemeTemplate {
+        RowThemeTemplate { theme }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "form/edit_theme.html")]
+pub struct EditRowThemeTemplate {
+    pub theme: model::Theme,
+}
+
+impl EditRowThemeTemplate {
+    pub fn new(theme: model::Theme) -> EditRowThemeTemplate {
+        EditRowThemeTemplate { theme }
+    }
+}
+
 // OBJECTIVE TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/objective.html")]
@@ -99,11 +123,38 @@ pub struct TableObjectivesTemplate {
 }
 
 impl TableObjectivesTemplate {
-    pub fn new(objectives: Option<Vec<model::Objective>>, theme_id: i32) -> TableObjectivesTemplate {
+    pub fn new(
+        objectives: Option<Vec<model::Objective>>,
+        theme_id: i32,
+    ) -> TableObjectivesTemplate {
         TableObjectivesTemplate {
             objectives,
             theme_id,
         }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "row/objective.html")]
+pub struct RowObjectiveTemplate {
+    pub objective: model::Objective,
+}
+
+impl RowObjectiveTemplate {
+    pub fn new(objective: model::Objective) -> RowObjectiveTemplate {
+        RowObjectiveTemplate { objective }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "form/edit_objective.html")]
+pub struct EditRowObjectiveTemplate {
+    pub objective: model::Objective,
+}
+
+impl EditRowObjectiveTemplate {
+    pub fn new(objective: model::Objective) -> EditRowObjectiveTemplate {
+        EditRowObjectiveTemplate { objective }
     }
 }
 
@@ -152,6 +203,30 @@ impl TableKeyResultsTemplate {
     }
 }
 
+#[derive(askama::Template)]
+#[template(path = "row/keyresult.html")]
+pub struct RowKeyResultTemplate {
+    pub keyresult: model::KeyResult,
+}
+
+impl RowKeyResultTemplate {
+    pub fn new(keyresult: model::KeyResult) -> RowKeyResultTemplate {
+        RowKeyResultTemplate { keyresult }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "form/edit_keyresult.html")]
+pub struct EditRowKeyResultTemplate {
+    pub keyresult: model::KeyResult,
+}
+
+impl EditRowKeyResultTemplate {
+    pub fn new(keyresult: model::KeyResult) -> EditRowKeyResultTemplate {
+        EditRowKeyResultTemplate { keyresult }
+    }
+}
+
 // INITIATIVE TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/initiative.html")]
@@ -187,6 +262,30 @@ impl TableInitiativesTemplate {
             initiatives,
             objective_id,
         }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "row/initiative.html")]
+pub struct RowInitiativeTemplate {
+    pub initiative: model::Initiative,
+}
+
+impl RowInitiativeTemplate {
+    pub fn new(initiative: model::Initiative) -> RowInitiativeTemplate {
+        RowInitiativeTemplate { initiative }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "form/edit_initiative.html")]
+pub struct EditRowInitiativeTemplate {
+    pub initiative: model::Initiative,
+}
+
+impl EditRowInitiativeTemplate {
+    pub fn new(initiative: model::Initiative) -> EditRowInitiativeTemplate {
+        EditRowInitiativeTemplate { initiative }
     }
 }
 
@@ -233,6 +332,120 @@ impl TableProjectsTemplate {
 }
 
 #[derive(askama::Template)]
+#[template(path = "row/project.html")]
+pub struct RowProjectTemplate {
+    pub project: model::Project,
+}
+
+impl RowProjectTemplate {
+    pub fn new(project: model::Project) -> RowProjectTemplate {
+        RowProjectTemplate { project }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "form/edit_project.html")]
+pub struct EditRowProjectTemplate {
+    pub project: model::Project,
+}
+
+impl EditRowProjectTemplate {
+    pub fn new(project: model::Project) -> EditRowProjectTemplate {
+        EditRowProjectTemplate { project }
+    }
+}
+
+// MEASUREMENT TEMPLATES
+#[derive(askama::Template)]
+#[template(path = "table/measurements.html")]
+pub struct TableMeasurementsTemplate {
+    pub measurements: Option<Vec<model::Measurement>>,
+    pub keyresult_id: i32,
+}
+
+impl TableMeasurementsTemplate {
+    pub fn new(
+        measurements: Option<Vec<model::Measurement>>,
+        keyresult_id: i32,
+    ) -> TableMeasurementsTemplate {
+        TableMeasurementsTemplate {
+            measurements,
+            keyresult_id,
+        }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "row/measurement.html")]
+pub struct RowMeasurementTemplate {
+    pub measurement: model::Measurement,
+}
+
+impl RowMeasurementTemplate {
+    pub fn new(measurement: model::Measurement) -> RowMeasurementTemplate {
+        RowMeasurementTemplate { measurement }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "form/edit_measurement.html")]
+pub struct EditRowMeasurementTemplate {
+    pub measurement: model::Measurement,
+}
+
+impl EditRowMeasurementTemplate {
+    pub fn new(measurement: model::Measurement) -> EditRowMeasurementTemplate {
+        EditRowMeasurementTemplate { measurement }
+    }
+}
+
+// TASK TEMPLATES
+#[derive(askama::Template)]
+#[template(path = "table/tasks.html")]
+pub struct TableTasksTemplate {
+    pub tasks: Option<Vec<model::Task>>,
+    pub project_id: i32,
+}
+
+impl TableTasksTemplate {
+    pub fn new(
+        tasks: Option<Vec<model::Task>>,
+        project_id: i32,
+    ) -> TableTasksTemplate {
+        TableTasksTemplate {
+            tasks,
+            project_id,
+        }
+    }
+}
+
+
+#[derive(askama::Template)]
+#[template(path = "row/task.html")]
+pub struct RowTaskTemplate {
+    pub task: model::Task,
+}
+
+impl RowTaskTemplate {
+    pub fn new(task: model::Task) -> RowTaskTemplate {
+        RowTaskTemplate { task }
+    }
+}
+
+#[derive(askama::Template)]
+#[template(path = "form/edit_task.html")]
+pub struct EditRowTaskTemplate {
+    pub task: model::Task,
+}
+
+impl EditRowTaskTemplate {
+    pub fn new(task: model::Task) -> EditRowTaskTemplate {
+        EditRowTaskTemplate { task }
+    }
+}
+
+// ERROR 404 page
+#[derive(askama::Template)]
 #[template(path = "page/error.html")]
 pub struct ErrorTemplate {
     pub error_code: StatusCode,
@@ -248,6 +461,7 @@ impl ErrorTemplate {
     }
 }
 
+// Convert templates into HTML
 pub struct HtmlTemplate<T>(pub T);
 
 impl<T> IntoResponse for HtmlTemplate<T>
