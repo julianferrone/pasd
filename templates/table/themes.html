@@ -3,21 +3,27 @@
     {% when Some with (themes) %}
     {% let themes_len = themes.len() %}
     {% if themes_len > 0 %}
-    <ul>
-        {% for theme in themes %}
-        <li><a href="http://localhost:3000/theme/{{ theme.theme_id }}">{{ theme.title }}</a>
-        </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <th>Theme</th>
+            <th>Actions</th>
+        </thead>
+        <tbody hx-target="closest tr" hx-swap="outerHTML">
+            {% for theme in themes %}
+            {% include "row/theme.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
     {% else -%}
     <p>No themes currently.</p>
     {% endif -%}
     {% when None %}
     <p>Error when retrieving the theme rows from database.</p>
     {% endmatch %}
-<br>
-<h3>Add theme</h3>
-<form hx-post="/theme" hx-target="#themes_response">
-    <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
-    <button type="submit">Create Theme</button>
-</form>
+    <br>
+    <h3>Add theme</h3>
+    <form hx-post="/theme" hx-target="#themes_response">
+        <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+        <button type="submit">Create Theme</button>
+    </form>
+</div>
