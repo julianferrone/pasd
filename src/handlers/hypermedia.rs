@@ -633,7 +633,7 @@ pub async fn remove_resource(
         "measure" => Ok(("measurements", "measurement_id")),
         _ => Err("error"),
     };
-    
+
     match result {
         Ok((table, id_name)) => {
             let _ = sqlx::query(r#"DELETE FROM $1 WHERE $2 = $3"#)
@@ -651,8 +651,8 @@ pub async fn remove_resource(
 // PUT /theme/:theme_id
 pub async fn update_theme(
     Extension(pool): Extension<PgPool>,
-    extract::Json(update_theme): extract::Json<model::UpdateTheme>,
     extract::Path(theme_id): extract::Path<i32>,
+    extract::Json(update_theme): extract::Json<model::UpdateTheme>,
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE themes SET title=$1, theme_status=$2 WHERE theme_id=$3"#)
         .bind(update_theme.title)
@@ -667,8 +667,8 @@ pub async fn update_theme(
 // PUT /objective/:objective_id
 pub async fn update_objective(
     Extension(pool): Extension<PgPool>,
-    extract::Json(update_objective): extract::Json<model::UpdateObjective>,
     extract::Path(objective_id): extract::Path<i32>,
+    extract::Json(update_objective): extract::Json<model::UpdateObjective>,
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE objectives SET title=$1 WHERE objective_id=$2"#)
         .bind(update_objective.title)
@@ -682,8 +682,8 @@ pub async fn update_objective(
 // PUT /keyresult/:keyresult_id
 pub async fn update_keyresult(
     Extension(pool): Extension<PgPool>,
-    extract::Json(update_keyresult): extract::Json<model::UpdateKeyResult>,
     extract::Path(keyresult_id): extract::Path<i32>,
+    extract::Json(update_keyresult): extract::Json<model::UpdateKeyResult>,
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE keyresults SET title=$1 WHERE keyresult_id=$2"#)
         .bind(update_keyresult.title)
@@ -697,8 +697,8 @@ pub async fn update_keyresult(
 // PUT /initiative/:initiative_id
 pub async fn update_initiative(
     Extension(pool): Extension<PgPool>,
-    extract::Json(update_initiative): extract::Json<model::UpdateInitiative>,
     extract::Path(initiative_id): extract::Path<i32>,
+    extract::Json(update_initiative): extract::Json<model::UpdateInitiative>,
 ) -> Redirect {
     let _ = sqlx::query(
         r#"UPDATE initiatives SET title=$1, initiative_status=$2 WHERE initiative_id=$3"#,
@@ -715,8 +715,8 @@ pub async fn update_initiative(
 // PUT /project/:project_id
 pub async fn update_project(
     Extension(pool): Extension<PgPool>,
-    extract::Json(update_project): extract::Json<model::UpdateProject>,
     extract::Path(project_id): extract::Path<i32>,
+    extract::Json(update_project): extract::Json<model::UpdateProject>,
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE projects SET title=$1, project_status=$2 WHERE project_id=$3"#)
         .bind(update_project.title)
@@ -731,8 +731,8 @@ pub async fn update_project(
 // PUT /task/:task_id
 pub async fn update_task(
     Extension(pool): Extension<PgPool>,
-    extract::Json(update_task): extract::Json<model::UpdateTask>,
     extract::Path(task_id): extract::Path<i32>,
+    extract::Json(update_task): extract::Json<model::UpdateTask>,
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE tasks SET title=$1, task_status=$2 WHERE project_id=$3"#)
         .bind(update_task.title)
@@ -747,8 +747,8 @@ pub async fn update_task(
 // PUT /measure/:measure_id
 pub async fn update_measure(
     Extension(pool): Extension<PgPool>,
-    extract::Json(update_measure): extract::Json<model::UpdateMeasurement>,
     extract::Path(measure_id): extract::Path<i32>,
+    extract::Json(update_measure): extract::Json<model::UpdateMeasurement>,
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE measurements SET title=$1 WHERE measurement_id=$2"#)
         .bind(update_measure.title)
