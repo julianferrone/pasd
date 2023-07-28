@@ -1,0 +1,11 @@
+<tr hx-trigger='cancel' class='editing' hx-get="/project/{{project.project_id}}">
+    <td><input name='title' value='{{ project.title }}'></td>
+    <td>
+        <button class="btn btn-danger" hx-get="/project/{{ project.project_id }}/row">
+            Cancel
+        </button>
+        <button class="btn btn-danger" hx-put="/project/{{ project.project_id }}" hx-include="closest tr">
+            Save
+        </button>
+    </td>
+</tr>

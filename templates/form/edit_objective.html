@@ -1,0 +1,11 @@
+<tr hx-trigger='cancel' class='editing' hx-get="/objective/{{objective.objective_id}}">
+    <td><input name='title' value='{{ objective.title }}'></td>
+    <td>
+        <button class="btn btn-danger" hx-get="/objective/{{ objective.objective_id }}/row">
+            Cancel
+        </button>
+        <button class="btn btn-danger" hx-put="/objective/{{ objective.objective_id }}" hx-include="closest tr">
+            Save
+        </button>
+    </td>
+</tr>
