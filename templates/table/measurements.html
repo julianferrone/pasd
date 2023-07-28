@@ -1,0 +1,29 @@
+<div id="measurements_response">
+    {% match measurements -%}
+    {% when Some with (measurements) %}
+    {% let measurements_len = measurements.len() %}
+    {% if measurements_len > 0 %}
+    <table>
+        <thead>
+            <th>Measurement</th>
+            <th>Actions</th>
+        </thead>
+        <tbody hx-target="closest tr" hx-swap="outerHTML">
+            {% for measurement in measurements %}
+            {% include "row/measurement.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else -%}
+    <p>No measurements currently.</p>
+    {% endif -%}
+    {% when None %}
+    <p>Error when retrieving the measurement rows from database.</p>
+    {% endmatch %}
+</div>
+<br>
+<h3>Add measurement</h3>
+<form hx-post="/measurement" hx-target="#measurements_response" hx-vals='{"keyresult_id": {{ keyresult_id }} }'>
+    <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+    <button type="submit">Create Measurement</button>
+</form>
