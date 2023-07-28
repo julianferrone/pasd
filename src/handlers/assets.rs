@@ -8,10 +8,10 @@ use mime::{
     TEXT_JAVASCRIPT,
 };
 
-// const FAVICON: &str = include_str!("../../static/image/favicon.ico");
 const HTMX: &str = include_str!("../../static/js/htmx.min.js");
 const HTMX_EXT_JSON: &str = include_str!("../../static/js/json-enc.js");
 const HYPERSCRIPT: &str = include_str!("../../static/js/hyperscript.min.js");
+const FAVICON: &[u8] = include_bytes!("../../static/img/favicon.ico");
 
 async fn asset(source: &'static [u8], ty: &'static str) -> impl IntoResponse {
     let mut headermap = HeaderMap::new();
@@ -41,6 +41,7 @@ pub async fn hyperscript_js() -> impl IntoResponse {
     js(HYPERSCRIPT).await
 }
 
-// pub async fn favicon() -> impl IntoResponse {
-//     asset(IMG_FAVICON, "image/x-icon").await
-// }
+pub async fn favicon() -> impl IntoResponse {
+    println!("Tried to get favicon!");
+    asset(FAVICON, "image/x-icon").await
+}

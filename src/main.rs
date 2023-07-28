@@ -123,6 +123,7 @@ fn get_hypermedia_routes() -> Router {
 
 fn get_static_asset_routes() -> Router {
     let static_assets_router = Router::new()
+        .route("/img/favicon.ico", get(assets::favicon))
         .route("/js/htmx.min.js", get(assets::htmx_js))
         .route("/js/json-enc.js", get(assets::htmx_ext_json_js))
         .route("/js/hyperscript.min.js", get(assets::hyperscript_js));
