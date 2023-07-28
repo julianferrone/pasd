@@ -10,7 +10,7 @@
         </thead>
         <tbody hx-target="closest tr" hx-swap="outerHTML">
             {% for task in tasks %}
-            {{ include "row/task.html" }}
+            {% include "row/task.html" %}
             {% endfor %}
         </tbody>
     </table>
