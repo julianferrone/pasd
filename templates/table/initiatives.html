@@ -10,29 +10,7 @@
         </thead>
         <tbody hx-target="closest tr" hx-swap="outerHTML">
             {% for initiative in initiatives %}
-            <tr>
-                <td><a href="http://localhost:3000/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a>
-                </td>
-                <td>
-                    <button class="btn btn-danger" hx-get="/initiative/{{ initiative.initiative_id }}/edit"
-                        hx-trigger="edit" _="on click
-                        if .editing is not empty
-                          Swal.fire({title: 'Already Editing',
-                                     showCancelButton: true,
-                                     confirmButtonText: 'Yep, Edit This Initiative!',
-                                     text:'Hey!  You are already editing a initiative!  Do you want to cancel that edit and continue?'})
-                          if the result's isConfirmed is false
-                            halt
-                          end
-                          send cancel to .editing
-                        end
-                        trigger edit">
-                        Edit</button>
-                    <button class="btn btn-danger" hx-delete="/initiative/{{ initiative.initiative_id }}">
-                        Delete
-                    </button>
-                </td>
-            </tr>
+            {% include "row/initiative.html" %}
             {% endfor %}
         </tbody>
     </table>
@@ -43,6 +21,7 @@
     <p>Error when retrieving the initiative rows from database.</p>
     {% endmatch %}
 </div>
+<br>
 <h3>Add initiative</h3>
 <form hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'>
     <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
