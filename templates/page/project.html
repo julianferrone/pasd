@@ -1,29 +1,11 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
-    <script type="text/javascript" src="/static/js/json-enc.js"></script>
-    <script type="text/javascript" src="/static/js/hyperscript.min.js"></script>
-</head>
+{% block title %}{{title}}{% endblock %}
 
-<body>
+{% block content %}
+<h1>Project: {{ title }}</h1>
+<h2>Objective: <a href="/objective/{{ objective_id }}"> {{ objective_title }}</a> </h2>
 
-    <h1>Project: {{ title }}</h1>
-    <h2>Objective: <a href="/objective/{{ objective_id }}"> {{ objective_title }}</a> </h2>
-
-    <h2>Tasks</h2>
-    {% if tasks.is_some() -%}
-    {% let tasks = tasks.clone().unwrap() %}
-    <ul>
-        {% for task in tasks %}
-        <li>{{ task.title }}</li>
-        {% endfor %}
-    </ul>
-    {%- else -%}
-    <p>No tasks currently.</p>
-    {%- endif %}
-
-</body>
-
-</html>
+<h2>Tasks</h2>
+{% include "table/tasks.html" %}
+{% endblock %}

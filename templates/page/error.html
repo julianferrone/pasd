@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html>
-<body>
+{% extends "base.html" %}
 
-<h1>Error: {{ error_code }}</h1>
+{% block title %}Error {{ error_code }}{% endblock %}
+
+{% block content %}
+<h1>Error {{ error_code }}</h1>
 <p>{{ error_message }}</p>
 
 <p><a href="/">Return to home</a></p>
-</body>
-</html> 
+{% endblock %}

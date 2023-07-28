@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
-    <script type="text/javascript" src="/static/js/json-enc.js"></script>
-    <script type="text/javascript" src="/static/js/hyperscript.min.js"></script>
-</head>
+{% block title %}{{title}}{% endblock %}
 
-<body>
-
-    <h1>Initiative: {{ title }}</h1>
-    <h2>Objective: <a href="/objective/{{ objective_id }}"> {{ objective_title }}</a> </h2>
-
-</body>
-
-</html>
+{% block content %}
+<h1>Initiative: {{ title }}</h1>
+<h2>Objective: <a href="/objective/{{ objective_id }}"> {{ objective_title }}</a> </h2>
+{% endblock %}

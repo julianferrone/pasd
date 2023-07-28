@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
-    <script type="text/javascript" src="/static/js/json-enc.js"></script>
-    <script type="text/javascript" src="/static/js/hyperscript.min.js"></script>
-</head>
+{% block title %}Home{% endblock %}
 
-<body hx-boost="true" hx-ext="json-enc">
-
-    <h1>Home</h1>
-    <h2>Themes</h2>
-    {% include "table/themes.html" %}
-</body>
-
-</html>
+{% block content %}
+<h1>Home</h1>
+<h2>Themes</h2>
+{% include "table/themes.html" %}
+{% endblock %}

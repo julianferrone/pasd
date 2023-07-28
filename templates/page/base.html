@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon" />
+    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
+    <script type="text/javascript" src="/static/js/json-enc.js"></script>
+    <script type="text/javascript" src="/static/js/hyperscript.min.js"></script>
+    <title>{% block title %}{{ title }}{% endblock %} - Peak Achievement System Dashboard</title>
+</head>
+
+<body hx-boost="true" hx-ext="json-enc">
+    <div id="content">
+        {% block content %}<p>Placeholder content</p>{% endblock %}
+    </div>
+</body>
+
+</html>

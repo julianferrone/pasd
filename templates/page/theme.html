@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <script type="text/javascript" src="/static/js/htmx.min.js"></script>
-    <script type="text/javascript" src="/static/js/json-enc.js"></script>
-    <script type="text/javascript" src="/static/js/hyperscript.min.js"></script>
-</head>
+{% block title %}{{title}}{% endblock %}
 
-<body hx-boost="true" hx-ext="json-enc">
-
+{% block content %}
     <h1>Theme: {{ title }}</h1>
     <h2>Status: {{ theme_status }} </h2>
     <h2>Objectives</h2>
     {% include "table/objectives.html" %}
-</body>
-
-</html>
+{% endblock %}
