@@ -1,0 +1,29 @@
+<div id="tasks_response">
+    {% match tasks -%}
+    {% when Some with (tasks) %}
+    {% let tasks_len = tasks.len() %}
+    {% if tasks_len > 0 %}
+    <table>
+        <thead>
+            <th>Task</th>
+            <th>Actions</th>
+        </thead>
+        <tbody hx-target="closest tr" hx-swap="outerHTML">
+            {% for task in tasks %}
+            {{ include "row/task.html" }}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else -%}
+    <p>No tasks currently.</p>
+    {% endif -%}
+    {% when None %}
+    <p>Error when retrieving the task rows from database.</p>
+    {% endmatch %}
+</div>
+<br>
+<h3>Add task</h3>
+<form hx-post="/task" hx-target="#tasks_response" hx-vals='{"project_id": {{ project_id }} }'>
+    <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+    <button type="submit">Create Task</button>
+</form>
