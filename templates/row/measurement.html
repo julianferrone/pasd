@@ -1,5 +1,5 @@
 <tr>
-    <td><a hx-boost="false" href="/measurement/{{ measurement.measurement_id }}">{{ measurement.title }}</a></td>
+    <td><a hx-boost="false" href="/measurement/{{ measurement.measurement_id }}">{{ measurement.measurement }}</a></td>
     <td>
       <button class="btn btn-danger" hx-get="/measurement/{{ measurement.measurement_id }}/form" hx-trigger="edit" _="on click
                        if .editing is not empty
