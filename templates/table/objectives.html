@@ -3,12 +3,17 @@
     {% when Some with (objectives) %}
     {% let objectives_len = objectives.len() %}
     {% if objectives_len > 0 %}
-    <ul>
-        {% for objective in objectives %}
-        <li><a href="http://localhost:3000/objective/{{ objective.objective_id }}">{{ objective.title }}</a>
-        </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <th>Objective</th>
+            <th>Actions</th>
+        </thead>
+        <tbody hx-target="closest tr" hx-swap="outerHTML">
+            {% for objective in objectives %}
+            {% include "row/objective.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
     {% else -%}
     <p>No objectives currently.</p>
     {% endif -%}
@@ -16,6 +21,7 @@
     <p>Error when retrieving the objective rows from database.</p>
     {% endmatch %}
 </div>
+<br>
 <h3>Add objective</h3>
 <form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }'>
     <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
