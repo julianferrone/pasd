@@ -46,10 +46,10 @@ pub async fn get_theme(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let theme_row = sqlx::query!(
-        r#"SELECT title, theme_status as "theme_status: model::Status" from themes where theme_id = $1"#,
-        &theme_id
+    let theme_row: Result<model::Theme, sqlx::Error> = sqlx::query_as(
+        r#"SELECT * from themes where theme_id = $1"#,
     )
+    .bind(&theme_id)
     .fetch_one(&pool)
     .await;
 
@@ -82,10 +82,54 @@ pub async fn get_theme(
 }
 
 // GET /theme/:theme_id/row
-pub async fn get_theme_row() {}
+pub async fn get_theme_row(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(theme_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let theme_row = sqlx::query_as(
+        r#"SELECT * from themes where theme_id = $1"#,
+    )
+    .bind(&theme_id)
+    .fetch_one(&pool)
+    .await;
+
+    match theme_row {
+        Ok(theme) => {
+            let template = templater::RowThemeTemplate::new(theme);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template =
+                templater::ErrorTemplate::new(StatusCode::NOT_FOUND, "Theme Not Found".to_string());
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /theme/:theme_id/form
-pub async fn get_theme_form() {}
+pub async fn get_theme_form(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(theme_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let theme_row = sqlx::query_as(
+        r#"SELECT * from themes where theme_id = $1"#,
+    )
+    .bind(&theme_id)
+    .fetch_one(&pool)
+    .await;
+
+    match theme_row {
+        Ok(theme) => {
+            let template = templater::EditRowThemeTemplate::new(theme);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template =
+                templater::ErrorTemplate::new(StatusCode::NOT_FOUND, "Theme Not Found".to_string());
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /theme/:theme_id/objectives
 pub async fn get_theme_objectives(
@@ -578,24 +622,30 @@ pub async fn add_measure(
 pub async fn remove_resource(
     Extension(pool): Extension<PgPool>,
     extract::Path((resource, resource_id)): extract::Path<(String, i32)>,
-) {
-    let (table, id_name) = match resource.as_str() {
-        "theme" => ("themes", "theme_id"),
-        "objective" => ("objectives", "objective_id"),
-        "keyresult" => ("keyresults", "keyresult_id"),
-        "initiative" => ("initiatives", "initiative_id"),
-        "project" => ("projects", "project_id"),
-        "task" => ("tasks", "task_id"),
-        "measure" => ("measurements", "measurement_id"),
-        _ => ("error", ""),
+) -> impl IntoResponse {
+    let result: Result<(&str, &str), &str> = match resource.as_str() {
+        "theme" => Ok(("themes", "theme_id")),
+        "objective" => Ok(("objectives", "objective_id")),
+        "keyresult" => Ok(("keyresults", "keyresult_id")),
+        "initiative" => Ok(("initiatives", "initiative_id")),
+        "project" => Ok(("projects", "project_id")),
+        "task" => Ok(("tasks", "task_id")),
+        "measure" => Ok(("measurements", "measurement_id")),
+        _ => Err("error"),
     };
-    let _ = sqlx::query(r#"DELETE FROM $1 WHERE $2 = $3"#)
-        .bind(table)
-        .bind(id_name)
-        .bind(resource_id)
-        .fetch_all(&pool)
-        .await;
-
+    
+    match result {
+        Ok((table, id_name)) => {
+            let _ = sqlx::query(r#"DELETE FROM $1 WHERE $2 = $3"#)
+                .bind(table)
+                .bind(id_name)
+                .bind(resource_id)
+                .fetch_all(&pool)
+                .await;
+            (StatusCode::OK, "")
+        }
+        Err(_) => (StatusCode::NOT_FOUND, ""),
+    };
 }
 
 // PUT /theme/:theme_id
