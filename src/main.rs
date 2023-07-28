@@ -15,143 +15,129 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 pub mod errors;
 pub mod handlers;
+use handlers::{assets, data, hypermedia};
 pub mod model;
 pub mod templater;
 
 fn get_hypermedia_routes() -> Router {
     let hypermedia_router = Router::new()
-        .route("/", get(handlers::hypermedia::get_root))
+        .route("/", get(hypermedia::get_root))
         .route(
             "/theme",
-            get(handlers::hypermedia::get_root_themes).post(handlers::hypermedia::add_theme),
+            get(hypermedia::get_root_themes).post(hypermedia::add_theme),
         )
-        .route("/theme/:theme_id", get(handlers::hypermedia::get_theme))
+        .route(
+            "/theme/:theme_id",
+            get(hypermedia::get_theme).put(hypermedia::update_theme),
+        )
         .route(
             "/theme/:theme_id/objectives",
-            get(handlers::hypermedia::get_theme_objectives),
+            get(hypermedia::get_theme_objectives),
         )
-        .route(
-            "/theme/:theme_id/row",
-            get(handlers::hypermedia::get_theme_row),
-        )
-        .route(
-            "/theme/:theme_id/form",
-            get(handlers::hypermedia::get_theme_form),
-        )
-        .route("/objective", post(handlers::hypermedia::add_objective))
+        .route("/theme/:theme_id/row", get(hypermedia::get_theme_row))
+        .route("/theme/:theme_id/form", get(hypermedia::get_theme_form))
+        .route("/objective", post(hypermedia::add_objective))
         .route(
             "/objective/:objective_id",
-            get(handlers::hypermedia::get_objective),
+            get(hypermedia::get_objective).put(hypermedia::update_objective),
         )
         .route(
             "/objective/:objective_id/keyresults",
-            get(handlers::hypermedia::get_objective_keyresults),
+            get(hypermedia::get_objective_keyresults),
         )
         .route(
             "/objective/:objective_id/initiatives",
-            get(handlers::hypermedia::get_objective_initiatives),
+            get(hypermedia::get_objective_initiatives),
         )
         .route(
             "/objective/:objective_id/projects",
-            get(handlers::hypermedia::get_objective_projects),
+            get(hypermedia::get_objective_projects),
         )
         .route(
             "/objective/:objective_id/row",
-            get(handlers::hypermedia::get_objective_row),
+            get(hypermedia::get_objective_row),
         )
         .route(
             "/objective/:objective_id/form",
-            get(handlers::hypermedia::get_objective_form),
+            get(hypermedia::get_objective_form),
         )
-        .route("/keyresult", post(handlers::hypermedia::add_keyresult))
+        .route("/keyresult", post(hypermedia::add_keyresult))
         .route(
             "/keyresult/:keyresult_id",
-            get(handlers::hypermedia::get_keyresult),
+            get(hypermedia::get_keyresult).put(hypermedia::update_keyresult),
         )
         .route(
             "/keyresult/:keyresult_id/row",
-            get(handlers::hypermedia::get_keyresult_row),
+            get(hypermedia::get_keyresult_row),
         )
         .route(
             "/keyresult/:keyresult_id/form",
-            get(handlers::hypermedia::get_keyresult_form),
+            get(hypermedia::get_keyresult_form),
         )
-        .route("/initiative", post(handlers::hypermedia::add_initiative))
+        .route("/initiative", post(hypermedia::add_initiative))
         .route(
             "/initiative/:initiative_id",
-            get(handlers::hypermedia::get_initiative),
+            get(hypermedia::get_initiative).put(hypermedia::update_initiative),
         )
         .route(
             "/initiative/:initiative_id/row",
-            get(handlers::hypermedia::get_initiative_row),
+            get(hypermedia::get_initiative_row),
         )
         .route(
             "/initiative/:initiative_id/form",
-            get(handlers::hypermedia::get_initiative_form),
+            get(hypermedia::get_initiative_form),
         )
-        .route("/project", post(handlers::hypermedia::add_project))
+        .route("/project", post(hypermedia::add_project))
         .route(
             "/project/:project_id",
-            get(handlers::hypermedia::get_project),
+            get(hypermedia::get_project).put(hypermedia::update_project),
         )
-        .route(
-            "/project/:project_id/row",
-            get(handlers::hypermedia::get_project_row),
-        )
+        .route("/project/:project_id/row", get(hypermedia::get_project_row))
         .route(
             "/project/:project_id/form",
-            get(handlers::hypermedia::get_project_form),
+            get(hypermedia::get_project_form),
         )
-        .route("/task", post(handlers::hypermedia::add_task))
-        .route("/task/:task_id", get(handlers::hypermedia::get_task))
+        .route("/task", post(hypermedia::add_task))
         .route(
-            "/task/:task_id/row",
-            get(handlers::hypermedia::get_task_row),
+            "/task/:task_id",
+            get(hypermedia::get_task).put(hypermedia::update_task),
         )
-        .route(
-            "/task/:task_id/form",
-            get(handlers::hypermedia::get_task_form),
-        )
-        .route("/measure", post(handlers::hypermedia::add_measure))
+        .route("/task/:task_id/row", get(hypermedia::get_task_row))
+        .route("/task/:task_id/form", get(hypermedia::get_task_form))
+        .route("/measure", post(hypermedia::add_measure))
         .route(
             "/measure/:measure_id",
-            get(handlers::hypermedia::get_measure),
+            get(hypermedia::get_measure).put(hypermedia::update_measure),
         )
-        .route(
-            "/measure/:measure_id/row",
-            get(handlers::hypermedia::get_measure_row),
-        )
+        .route("/measure/:measure_id/row", get(hypermedia::get_measure_row))
         .route(
             "/measure/:measure_id/form",
-            get(handlers::hypermedia::get_measure_form),
+            get(hypermedia::get_measure_form),
         )
         .route(
             "/:resource/:resource_id",
-            delete(handlers::hypermedia::remove_resource),
+            delete(hypermedia::remove_resource),
         );
     hypermedia_router
 }
 
 fn get_static_asset_routes() -> Router {
     let static_assets_router = Router::new()
-        .route("/js/htmx.min.js", get(handlers::assets::htmx_js))
-        .route("/js/json-enc.js", get(handlers::assets::htmx_ext_json_js))
-        .route(
-            "/js/hyperscript.min.js",
-            get(handlers::assets::hyperscript_js),
-        );
+        .route("/js/htmx.min.js", get(assets::htmx_js))
+        .route("/js/json-enc.js", get(assets::htmx_ext_json_js))
+        .route("/js/hyperscript.min.js", get(assets::hyperscript_js));
     static_assets_router
 }
 
 fn get_data_routes() -> Router {
     let data_router = Router::new()
-        .route("/theme", get(handlers::data::get_all_themes))
-        .route("/objective", get(handlers::data::get_all_objectives))
-        .route("/keyresult", get(handlers::data::get_all_keyresults))
-        .route("/initiative", get(handlers::data::get_all_initiatives))
-        .route("/project", get(handlers::data::get_all_projects))
-        .route("/task", get(handlers::data::get_all_tasks))
-        .route("/measurement", get(handlers::data::get_all_measures));
+        .route("/theme", get(data::get_all_themes))
+        .route("/objective", get(data::get_all_objectives))
+        .route("/keyresult", get(data::get_all_keyresults))
+        .route("/initiative", get(data::get_all_initiatives))
+        .route("/project", get(data::get_all_projects))
+        .route("/task", get(data::get_all_tasks))
+        .route("/measurement", get(data::get_all_measures));
     data_router
 }
 
@@ -191,7 +177,7 @@ async fn main() -> Result<(), String> {
         .nest("/", get_hypermedia_routes())
         .nest("/api", get_data_routes())
         .nest("/static", get_static_asset_routes())
-        // .fallback(handlers::hypermedia::get_error_404_page)
+        // .fallback(hypermedia::get_error_404_page)
         .layer(
             ServiceBuilder::new()
                 .layer(Extension(pool))
