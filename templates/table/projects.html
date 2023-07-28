@@ -3,12 +3,17 @@
     {% when Some with (projects) %}
     {% let projects_len = projects.len() %}
     {% if projects_len > 0 %}
-    <ul>
-        {% for project in projects %}
-        <li><a href="http://localhost:3000/project/{{ project.project_id }}">{{ project.title }}</a>
-        </li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <th>project</th>
+            <th>Actions</th>
+        </thead>
+        <tbody hx-target="closest tr" hx-swap="outerHTML">
+            {% for project in projects %}
+            {% include "row/project.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
     {% else -%}
     <p>No projects currently.</p>
     {% endif -%}
@@ -16,6 +21,7 @@
     <p>Error when retrieving the project rows from database.</p>
     {% endmatch %}
 </div>
+<br>
 <h3>Add project</h3>
 <form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
     <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
