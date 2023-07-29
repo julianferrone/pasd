@@ -650,43 +650,6 @@ pub async fn get_project_tasks(
     templater::HtmlTemplate(template).into_response()
 }
 
-// GET /task/:task_id
-pub async fn get_task(
-    Extension(pool): Extension<PgPool>,
-    extract::Path(task_id): extract::Path<i32>,
-) -> axum::response::Response {
-    let project_row = sqlx::query!(
-        r#"
-        SELECT tasks.title, projects.project_id, projects.title as objective_title 
-        FROM tasks
-        LEFT JOIN projects 
-        ON tasks.project_id = projects.project_id 
-        WHERE tasks.task_id = $1;
-        "#,
-        task_id
-    )
-    .fetch_one(&pool)
-    .await;
-
-    match project_row {
-        Ok(project) => {
-            let template = templater::InitiativeTemplate::new(
-                project.title,
-                project.project_id,
-                project.objective_title,
-            );
-            templater::HtmlTemplate(template).into_response()
-        }
-        Err(_) => {
-            let template = templater::ErrorTemplate::new(
-                StatusCode::NOT_FOUND,
-                "Key Result Not Found".to_string(),
-            );
-            templater::HtmlTemplate(template).into_response()
-        }
-    }
-}
-
 // GET /task/:task_id/row
 pub async fn get_task_row(
     Extension(pool): Extension<PgPool>,
@@ -732,43 +695,6 @@ pub async fn get_task_form(
         }
     }
 }
-
-// // GET /measure/:measure_id
-// pub async fn get_measure(
-//     Extension(pool): Extension<PgPool>,
-//     extract::Path(measurement_id): extract::Path<i32>,
-// ) -> axum::response::Response {
-//     let project_row = sqlx::query!(
-//         r#"
-//         SELECT measurements.title, keyresults.keyresult_id, keyresults.title as keyresult_title
-//         FROM measurements
-//         LEFT JOIN keyresults
-//         ON measurements.keyresult_id = keyresults.keyresult_id
-//         WHERE measurements.measurement_id = $1;
-//         "#,
-//         measurement_id
-//     )
-//     .fetch_one(&pool)
-//     .await;
-
-//     match project_row {
-//         Ok(project) => {
-//             let template = templater::InitiativeTemplate::new(
-//                 project.title,
-//                 project.project_id,
-//                 project.objective_title,
-//             );
-//             templater::HtmlTemplate(template).into_response()
-//         }
-//         Err(_) => {
-//             let template = templater::ErrorTemplate::new(
-//                 StatusCode::NOT_FOUND,
-//                 "Key Result Not Found".to_string(),
-//             );
-//             templater::HtmlTemplate(template).into_response()
-//         }
-//     }
-// }
 
 // GET /measure/:measurement_id/row
 pub async fn get_measure_row(
@@ -940,36 +866,6 @@ pub async fn add_measure(
     Redirect::to(&uri)
 }
 
-// DELETE /:resource/:resource_id
-pub async fn remove_resource(
-    Extension(pool): Extension<PgPool>,
-    extract::Path((resource, resource_id)): extract::Path<(String, i32)>,
-) -> impl IntoResponse {
-    let result: Result<(&str, &str), &str> = match resource.as_str() {
-        "theme" => Ok(("themes", "theme_id")),
-        "objective" => Ok(("objectives", "objective_id")),
-        "keyresult" => Ok(("keyresults", "keyresult_id")),
-        "initiative" => Ok(("initiatives", "initiative_id")),
-        "project" => Ok(("projects", "project_id")),
-        "task" => Ok(("tasks", "task_id")),
-        "measure" => Ok(("measurements", "measurement_id")),
-        _ => Err("error"),
-    };
-
-    match result {
-        Ok((table, id_name)) => {
-            let _ = sqlx::query(r#"DELETE FROM $1 WHERE $2 = $3"#)
-                .bind(table)
-                .bind(id_name)
-                .bind(resource_id)
-                .fetch_all(&pool)
-                .await;
-            (StatusCode::OK, "")
-        }
-        Err(_) => (StatusCode::NOT_FOUND, ""),
-    };
-}
-
 // PUT /theme/:theme_id
 pub async fn update_theme(
     Extension(pool): Extension<PgPool>,
@@ -1082,4 +978,88 @@ pub async fn update_measure(
         .await;
     let uri = format!("/measure/{measure_id}/row");
     Redirect::to(&uri)
+}
+
+// DELETE /theme/:theme_id
+pub async fn remove_theme(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(theme_id): extract::Path<i32>,
+) -> impl IntoResponse {
+    let _ = sqlx::query(r#"DELETE FROM themes WHERE theme_id = $1"#)
+        .bind(theme_id)
+        .fetch_all(&pool)
+        .await;
+    (StatusCode::OK, "")
+}
+
+// DELETE /objective/:objective_id
+pub async fn remove_objective(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(objective_id): extract::Path<i32>,
+) -> impl IntoResponse {
+    let _ = sqlx::query(r#"DELETE FROM objectives WHERE objective_id = $1"#)
+        .bind(objective_id)
+        .fetch_all(&pool)
+        .await;
+    (StatusCode::OK, "")
+}
+
+// DELETE /keyresult/:keyresult_id
+pub async fn remove_keyresult(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(keyresult_id): extract::Path<i32>,
+) -> impl IntoResponse {
+    let _ = sqlx::query(r#"DELETE FROM keyresults WHERE keyresult_id = $1"#)
+        .bind(keyresult_id)
+        .fetch_all(&pool)
+        .await;
+    (StatusCode::OK, "")
+}
+
+// DELETE /initiative/:initiative_id
+pub async fn remove_initiative(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(initiative_id): extract::Path<i32>,
+) -> impl IntoResponse {
+    let _ = sqlx::query(r#"DELETE FROM initiatives WHERE initiative_id = $1"#)
+        .bind(initiative_id)
+        .fetch_all(&pool)
+        .await;
+    (StatusCode::OK, "")
+}
+
+// DELETE /project/:project_id
+pub async fn remove_project(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(project_id): extract::Path<i32>,
+) -> impl IntoResponse {
+    let _ = sqlx::query(r#"DELETE FROM projects WHERE project_id = $1"#)
+        .bind(project_id)
+        .fetch_all(&pool)
+        .await;
+    (StatusCode::OK, "")
+}
+
+// DELETE /task/:task_id
+pub async fn remove_task(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(task_id): extract::Path<i32>,
+) -> impl IntoResponse {
+    let _ = sqlx::query(r#"DELETE FROM tasks WHERE task_id = $1"#)
+        .bind(task_id)
+        .fetch_all(&pool)
+        .await;
+    (StatusCode::OK, "")
+}
+
+// DELETE /measure/:measure_id
+pub async fn remove_measure(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(measure_id): extract::Path<i32>,
+) -> impl IntoResponse {
+    let _ = sqlx::query(r#"DELETE FROM measures WHERE measure_id = $1"#)
+        .bind(measure_id)
+        .fetch_all(&pool)
+        .await;
+    (StatusCode::OK, "")
 }
