@@ -6,22 +6,32 @@
   </td>
   <td>
     <button class="btn btn-danger" hx-get="/objective/{{ objective.objective_id }}/form" hx-trigger="edit" _="on click
-                       if .editing is not empty
-                         Swal.fire({title: 'Already Editing',
-                                    showCancelButton: true,
-                                    confirmButtonText: 'Yep, Edit This Objective!',
-                                    text:'Hey!  You are already editing a objective!  Do you want to cancel that edit and continue?'})
-                         if the result's isConfirmed is false
-                           halt
-                         end
-                         send cancel to .editing
-                       end
-                       trigger edit">
+      if .editing is not empty
+        Swal.fire({title: 'Already Editing',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yep, Edit This Objective!',
+                  text:'Hey!  You are already editing a objective!  Do you want to cancel that edit and continue?'})
+        if the result's isConfirmed is false
+          halt
+        end
+        send cancel to .editing
+      end
+      trigger edit">
       Edit
     </button>
-  </td>
-  <td>
-    <button class="btn btn-danger" hx-delete="/objective/{{ objective.objective_id }}">
+    <button class="btn btn-danger" hx-delete="/objective/{{ objective.objective_id }}" hx-trigger="delete" _="on click
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33000',
+        confirmButtonText: 'Delete \'{{ objective.title }}\''})
+      if the result's isConfirmed is false
+        halt
+      end
+      trigger delete">
       Delete
     </button>
   </td>

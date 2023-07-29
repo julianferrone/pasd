@@ -1,7 +1,7 @@
 <tr>
   <td>
-    <div hx-boost="false">
-      <a href="/task/{{ task.task_id }}">{{ task.title }}
+    <div>
+      {{ task.title }}
     </div>
   </td>
   <td>
@@ -16,22 +16,32 @@
   </td>
   <td>
     <button class="btn btn-danger" hx-get="/task/{{ task.task_id }}/form" hx-trigger="edit" _="on click
-                   if .editing is not empty
-                     Swal.fire({title: 'Already Editing',
-                                showCancelButton: true,
-                                confirmButtonText: 'Yep, Edit This Task!',
-                                text:'Hey!  You are already editing a task!  Do you want to cancel that edit and continue?'})
-                     if the result's isConfirmed is false
-                       halt
-                     end
-                     send cancel to .editing
-                   end
-                   trigger edit">
+      if .editing is not empty
+        Swal.fire({title: 'Already Editing',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yep, Edit This Task!',
+                  text:'Hey!  You are already editing a task!  Do you want to cancel that edit and continue?'})
+        if the result's isConfirmed is false
+          halt
+        end
+        send cancel to .editing
+      end
+      trigger edit">
       Edit
     </button>
-  </td>
-  <td>
-    <button class="btn btn-danger" hx-delete="/task/{{ task.task_id }}">
+    <button class="btn btn-danger" hx-delete="/task/{{ task.task_id }}" hx-trigger="delete" _="on click
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33000',
+        confirmButtonText: 'Delete \'{{ task.title }}\''})
+      if the result's isConfirmed is false
+        halt
+      end
+      trigger delete">
       Delete
     </button>
   </td>
