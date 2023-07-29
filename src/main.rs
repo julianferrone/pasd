@@ -1,7 +1,7 @@
 use axum::extract::Extension;
 // use axum::http::{StatusCode, Uri};
 use axum::{
-    routing::{delete, get, post},
+    routing::{delete, get, post, put},
     Router,
 };
 
@@ -74,6 +74,10 @@ fn get_hypermedia_routes() -> Router {
             "/keyresult/:keyresult_id/form",
             get(hypermedia::get_keyresult_form),
         )
+        .route(
+            "/keyresult/:keyresult_id/measures",
+            get(hypermedia::get_keyresult_measurements)
+        )
         .route("/initiative", post(hypermedia::add_initiative))
         .route(
             "/initiative/:initiative_id",
@@ -97,6 +101,10 @@ fn get_hypermedia_routes() -> Router {
             "/project/:project_id/form",
             get(hypermedia::get_project_form),
         )
+        .route(
+            "/project/:project_id/tasks",
+            get(hypermedia::get_project_tasks)
+        )
         .route("/task", post(hypermedia::add_task))
         .route(
             "/task/:task_id",
@@ -107,7 +115,7 @@ fn get_hypermedia_routes() -> Router {
         .route("/measure", post(hypermedia::add_measure))
         .route(
             "/measure/:measure_id",
-            get(hypermedia::get_measure).put(hypermedia::update_measure),
+            put(hypermedia::update_measure),
         )
         .route("/measure/:measure_id/row", get(hypermedia::get_measure_row))
         .route(
@@ -124,9 +132,10 @@ fn get_hypermedia_routes() -> Router {
 fn get_static_asset_routes() -> Router {
     let static_assets_router = Router::new()
         .route("/img/favicon.ico", get(assets::favicon))
-        .route("/js/htmx.min.js", get(assets::htmx_js))
         .route("/js/json-enc.js", get(assets::htmx_ext_json_js))
-        .route("/js/hyperscript.min.js", get(assets::hyperscript_js));
+        .route("/js/htmx.min.js", get(assets::htmx_js))
+        .route("/js/hyperscript.min.js", get(assets::hyperscript_js))
+        .route("/js/sweetalert2.min.js", get(assets::sweetalert_2_js));
     static_assets_router
 }
 
