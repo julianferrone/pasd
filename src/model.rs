@@ -84,7 +84,7 @@ pub struct CreateInitiative {
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct UpdateInitiative {
     pub title: String,
-    pub initiative_status: Status,
+    pub status: Status,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -106,7 +106,7 @@ pub struct CreateProject {
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct UpdateProject {
     pub title: String,
-    pub project_status: Status
+    pub status: Status
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
@@ -128,7 +128,7 @@ pub struct CreateTask {
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct UpdateTask {
     pub title: String,
-    pub task_status: Status
+    pub status: Status
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
