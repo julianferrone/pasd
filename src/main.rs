@@ -1,7 +1,7 @@
 use axum::extract::Extension;
 // use axum::http::{StatusCode, Uri};
 use axum::{
-    routing::{delete, get, post, put},
+    routing::{get, post, put},
     Router,
 };
 
@@ -28,7 +28,9 @@ fn get_hypermedia_routes() -> Router {
         )
         .route(
             "/theme/:theme_id",
-            get(hypermedia::get_theme).put(hypermedia::update_theme),
+            get(hypermedia::get_theme)
+                .put(hypermedia::update_theme)
+                .delete(hypermedia::remove_theme),
         )
         .route(
             "/theme/:theme_id/objectives",
@@ -39,7 +41,9 @@ fn get_hypermedia_routes() -> Router {
         .route("/objective", post(hypermedia::add_objective))
         .route(
             "/objective/:objective_id",
-            get(hypermedia::get_objective).put(hypermedia::update_objective),
+            get(hypermedia::get_objective)
+                .put(hypermedia::update_objective)
+                .delete(hypermedia::remove_objective),
         )
         .route(
             "/objective/:objective_id/keyresults",
@@ -64,7 +68,9 @@ fn get_hypermedia_routes() -> Router {
         .route("/keyresult", post(hypermedia::add_keyresult))
         .route(
             "/keyresult/:keyresult_id",
-            get(hypermedia::get_keyresult).put(hypermedia::update_keyresult),
+            get(hypermedia::get_keyresult)
+                .put(hypermedia::update_keyresult)
+                .delete(hypermedia::remove_keyresult),
         )
         .route(
             "/keyresult/:keyresult_id/row",
@@ -76,12 +82,14 @@ fn get_hypermedia_routes() -> Router {
         )
         .route(
             "/keyresult/:keyresult_id/measures",
-            get(hypermedia::get_keyresult_measurements)
+            get(hypermedia::get_keyresult_measurements),
         )
         .route("/initiative", post(hypermedia::add_initiative))
         .route(
             "/initiative/:initiative_id",
-            get(hypermedia::get_initiative).put(hypermedia::update_initiative),
+            get(hypermedia::get_initiative)
+                .put(hypermedia::update_initiative)
+                .delete(hypermedia::remove_initiative),
         )
         .route(
             "/initiative/:initiative_id/row",
@@ -94,7 +102,9 @@ fn get_hypermedia_routes() -> Router {
         .route("/project", post(hypermedia::add_project))
         .route(
             "/project/:project_id",
-            get(hypermedia::get_project).put(hypermedia::update_project),
+            get(hypermedia::get_project)
+                .put(hypermedia::update_project)
+                .delete(hypermedia::remove_project),
         )
         .route("/project/:project_id/row", get(hypermedia::get_project_row))
         .route(
@@ -103,28 +113,24 @@ fn get_hypermedia_routes() -> Router {
         )
         .route(
             "/project/:project_id/tasks",
-            get(hypermedia::get_project_tasks)
+            get(hypermedia::get_project_tasks),
         )
         .route("/task", post(hypermedia::add_task))
         .route(
             "/task/:task_id",
-            get(hypermedia::get_task).put(hypermedia::update_task),
+            put(hypermedia::update_task).delete(hypermedia::remove_task),
         )
         .route("/task/:task_id/row", get(hypermedia::get_task_row))
         .route("/task/:task_id/form", get(hypermedia::get_task_form))
         .route("/measure", post(hypermedia::add_measure))
         .route(
             "/measure/:measure_id",
-            put(hypermedia::update_measure),
+            put(hypermedia::update_measure).delete(hypermedia::remove_measure),
         )
         .route("/measure/:measure_id/row", get(hypermedia::get_measure_row))
         .route(
             "/measure/:measure_id/form",
             get(hypermedia::get_measure_form),
-        )
-        .route(
-            "/:resource/:resource_id",
-            delete(hypermedia::remove_resource),
         );
     hypermedia_router
 }
