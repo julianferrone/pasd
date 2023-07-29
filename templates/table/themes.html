@@ -21,10 +21,10 @@
     {% when None %}
     <p>Error when retrieving the theme rows from database.</p>
     {% endmatch %}
+    <br>
+    <h3>Add theme</h3>
+    <form hx-post="/theme" hx-target="#themes_response">
+        <label for="title">Title:</label><input type="text" id="title" name="title"><br>
+        <button type="submit">Create Theme</button>
+    </form>
 </div>
-<br>
-<h3>Add theme</h3>
-<form hx-post="/theme" hx-target="#themes_response">
-    <label for="title">Title:</label><input type="text" id="title" name="title"><br>
-    <button type="submit">Create Theme</button>
-</form>

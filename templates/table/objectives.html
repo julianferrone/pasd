@@ -20,10 +20,10 @@
     {% when None %}
     <p>Error when retrieving the objective rows from database.</p>
     {% endmatch %}
+    <br>
+    <h3>Add objective</h3>
+    <form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }'>
+        <label for="title">Title:</label><input type="text" id="title" name="title"><br>
+        <button type="submit">Create Objective</button>
+    </form>
 </div>
-<br>
-<h3>Add objective</h3>
-<form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }'>
-    <label for="title">Title:</label><input type="text" id="title" name="title"><br>
-    <button type="submit">Create Objective</button>
-</form>

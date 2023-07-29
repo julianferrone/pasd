@@ -21,10 +21,10 @@
     {% when None %}
     <p>Error when retrieving the initiative rows from database.</p>
     {% endmatch %}
+    <br>
+    <h3>Add initiative</h3>
+    <form hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+        <label for="title">Title:</label><input type="text" id="title" name="title"><br>
+        <button type="submit">Create Initiative</button>
+    </form>
 </div>
-<br>
-<h3>Add initiative</h3>
-<form hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'>
-    <label for="title">Title:</label><input type="text" id="title" name="title"><br>
-    <button type="submit">Create Initiative</button>
-</form>

@@ -21,10 +21,10 @@
     {% when None %}
     <p>Error when retrieving the project rows from database.</p>
     {% endmatch %}
+    <br>
+    <h3>Add project</h3>
+    <form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+        <label for="title">Title:</label><input type="text" id="title" name="title"><br>
+        <button type="submit">Create Project</button>
+    </form>
 </div>
-<br>
-<h3>Add project</h3>
-<form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
-    <label for="title">Title:</label><input type="text" id="title" name="title"><br>
-    <button type="submit">Create Project</button>
-</form>
