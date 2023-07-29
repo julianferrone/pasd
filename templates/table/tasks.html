@@ -25,6 +25,6 @@
 <br>
 <h3>Add task</h3>
 <form hx-post="/task" hx-target="#tasks_response" hx-vals='{"project_id": {{ project_id }} }'>
-    <label for="new_title">Title:</label><input type="text" id="new_title" name="new_title"><br>
+    <label for="title">Title:</label><input type="text" id="title" name="title"><br>
     <button type="submit">Create Task</button>
 </form>
