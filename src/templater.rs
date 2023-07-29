@@ -4,6 +4,7 @@ use axum::{
     http::StatusCode,
     response::{Html, IntoResponse},
 };
+use model::Status;
 
 // ROOT TEMPLATES
 #[derive(askama::Template)]
@@ -163,6 +164,7 @@ impl EditRowObjectiveTemplate {
 #[template(path = "page/keyresult.html")]
 pub struct KeyResultTemplate {
     pub title: String,
+    pub keyresult_id: i32,
     pub objective_id: i32,
     pub objective_title: String,
     pub measurements: Option<Vec<model::Measurement>>,
@@ -172,11 +174,13 @@ impl KeyResultTemplate {
     pub fn new(
         title: String,
         objective_id: i32,
+        keyresult_id: i32,
         objective_title: String,
         measurements: Option<Vec<model::Measurement>>,
     ) -> KeyResultTemplate {
         KeyResultTemplate {
             title,
+            keyresult_id,
             objective_id,
             objective_title,
             measurements,
@@ -294,6 +298,7 @@ impl EditRowInitiativeTemplate {
 #[template(path = "page/project.html")]
 pub struct ProjectTemplate {
     pub title: String,
+    pub project_id: i32,
     pub objective_id: i32,
     pub objective_title: String,
     pub tasks: Option<Vec<model::Task>>,
@@ -302,12 +307,14 @@ pub struct ProjectTemplate {
 impl ProjectTemplate {
     pub fn new(
         title: String,
+        project_id: i32,
         objective_id: i32,
         objective_title: String,
         tasks: Option<Vec<model::Task>>,
     ) -> ProjectTemplate {
         ProjectTemplate {
             title,
+            project_id,
             objective_id,
             objective_title,
             tasks,
