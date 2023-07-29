@@ -15,7 +15,7 @@
     {% endmatch %}
   </td>
   <td>
-    <button class="btn btn-danger" hx-get="/task/{{ task.task_id }}/edit" hx-trigger="edit" _="on click
+    <button class="btn btn-danger" hx-get="/task/{{ task.task_id }}/form" hx-trigger="edit" _="on click
                    if .editing is not empty
                      Swal.fire({title: 'Already Editing',
                                 showCancelButton: true,
