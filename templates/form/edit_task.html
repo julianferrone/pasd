@@ -1,5 +1,14 @@
 <tr hx-trigger='cancel' class='editing' hx-get="/task/{{task.task_id}}">
     <td><input name='title' value='{{ task.title }}'></td>
+    <td class="dropdown">
+        <form action="" name="FILTER">
+            <select name="status" >
+                <option value="NotStarted">Not Started</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </form>
+    </td>
     <td>
         <button class="btn btn-danger" hx-get="/task/{{ task.task_id }}/row">
             Cancel
