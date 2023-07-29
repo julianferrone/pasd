@@ -1,4 +1,4 @@
-<tr hx-trigger='cancel' class='editing' hx-get="/measurement/{{measurement.measurement_id}}">
+<tr hx-trigger='cancel' class='editing' hx-get="/measurement/{{measurement.measurement_id}}/row">
     <td><input name='title' value='{{ measurement.measurement }}'></td>
     <td>
         <button class="btn btn-danger" hx-get="/measurement/{{ measurement.measurement_id }}/row">
