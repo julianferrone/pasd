@@ -46,12 +46,11 @@ pub async fn get_theme(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let theme_row: Result<model::Theme, sqlx::Error> = sqlx::query_as(
-        r#"SELECT * from themes where theme_id = $1"#,
-    )
-    .bind(&theme_id)
-    .fetch_one(&pool)
-    .await;
+    let theme_row: Result<model::Theme, sqlx::Error> =
+        sqlx::query_as(r#"SELECT * from themes where theme_id = $1"#)
+            .bind(&theme_id)
+            .fetch_one(&pool)
+            .await;
 
     match theme_row {
         Ok(theme) => {
@@ -86,12 +85,10 @@ pub async fn get_theme_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let theme_row = sqlx::query_as(
-        r#"SELECT * from themes where theme_id = $1"#,
-    )
-    .bind(&theme_id)
-    .fetch_one(&pool)
-    .await;
+    let theme_row = sqlx::query_as(r#"SELECT * from themes where theme_id = $1"#)
+        .bind(&theme_id)
+        .fetch_one(&pool)
+        .await;
 
     match theme_row {
         Ok(theme) => {
@@ -111,12 +108,10 @@ pub async fn get_theme_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let theme_row = sqlx::query_as(
-        r#"SELECT * from themes where theme_id = $1"#,
-    )
-    .bind(&theme_id)
-    .fetch_one(&pool)
-    .await;
+    let theme_row = sqlx::query_as(r#"SELECT * from themes where theme_id = $1"#)
+        .bind(&theme_id)
+        .fetch_one(&pool)
+        .await;
 
     match theme_row {
         Ok(theme) => {
@@ -224,10 +219,54 @@ pub async fn get_objective(
 }
 
 // GET /objective/:objective_id/row
-pub async fn get_objective_row() {}
+pub async fn get_objective_row(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(objective_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let objective_row = sqlx::query_as(r#"SELECT * from objectives where objective_id = $1"#)
+        .bind(&objective_id)
+        .fetch_one(&pool)
+        .await;
+
+    match objective_row {
+        Ok(objective) => {
+            let template = templater::RowObjectiveTemplate::new(objective);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Objective Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /objective/:objective_id/form
-pub async fn get_objective_form() {}
+pub async fn get_objective_form(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(objective_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let objective_row = sqlx::query_as(r#"SELECT * from objectives where objective_id = $1"#)
+        .bind(&objective_id)
+        .fetch_one(&pool)
+        .await;
+
+    match objective_row {
+        Ok(objective) => {
+            let template = templater::EditRowObjectiveTemplate::new(objective);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Objective Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /objective/:objective_id/keyresults
 pub async fn get_objective_keyresults(
@@ -320,6 +359,7 @@ pub async fn get_keyresult(
             let template = templater::KeyResultTemplate::new(
                 keyresult.title,
                 keyresult.objective_id,
+                keyresult_id,
                 keyresult.objective_title,
                 measurements,
             );
@@ -336,12 +376,73 @@ pub async fn get_keyresult(
 }
 
 // GET /keyresult/:keyresult_id/row
-pub async fn get_keyresult_row() {}
+pub async fn get_keyresult_row(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(keyresult_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let keyresult_row = sqlx::query_as(r#"SELECT * from keyresults where keyresult_id = $1"#)
+        .bind(&keyresult_id)
+        .fetch_one(&pool)
+        .await;
+
+    match keyresult_row {
+        Ok(keyresult) => {
+            let template = templater::RowKeyResultTemplate::new(keyresult);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Key Result Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /keyresult/:keyresult_id/form
-pub async fn get_keyresult_form() {}
+pub async fn get_keyresult_form(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(keyresult_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let keyresult_row = sqlx::query_as(r#"SELECT * from keyresults where keyresult_id = $1"#)
+        .bind(&keyresult_id)
+        .fetch_one(&pool)
+        .await;
 
-pub async fn get_keyresult_measurements() {}
+    match keyresult_row {
+        Ok(keyresult) => {
+            let template = templater::EditRowKeyResultTemplate::new(keyresult);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Key Result Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
+
+// GET /keyresult/:keyresult_id/measurements
+pub async fn get_keyresult_measurements(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(keyresult_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let measurements: Option<Vec<model::Measurement>> = sqlx::query_as(
+        r#"SELECT *
+        FROM measurements
+        where measurements.keyresult_id = $1
+        ORDER BY measurements.project_id;"#,
+    )
+    .bind(&keyresult_id)
+    .fetch_all(&pool)
+    .await
+    .ok();
+    let template = templater::TableMeasurementsTemplate::new(measurements.clone(), keyresult_id);
+    templater::HtmlTemplate(template).into_response()
+}
 
 // GET /initiative/:initiative_id
 pub async fn get_initiative(
@@ -381,10 +482,54 @@ pub async fn get_initiative(
 }
 
 // GET /initiative/:initiative_id/row
-pub async fn get_initiative_row() {}
+pub async fn get_initiative_row(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(initiative_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let initiative_row = sqlx::query_as(r#"SELECT * from initiatives where initiative_id = $1"#)
+        .bind(&initiative_id)
+        .fetch_one(&pool)
+        .await;
+
+    match initiative_row {
+        Ok(initiative) => {
+            let template = templater::RowInitiativeTemplate::new(initiative);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Initiative Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /initiative/:initiative_id/form
-pub async fn get_initiative_form() {}
+pub async fn get_initiative_form(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(initiative_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let initiative_row = sqlx::query_as(r#"SELECT * from initiatives where initiative_id = $1"#)
+        .bind(&initiative_id)
+        .fetch_one(&pool)
+        .await;
+
+    match initiative_row {
+        Ok(initiative) => {
+            let template = templater::EditRowInitiativeTemplate::new(initiative);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Initiative Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /project/:project_id
 pub async fn get_project(
@@ -419,6 +564,7 @@ pub async fn get_project(
 
             let template = templater::ProjectTemplate::new(
                 project.title,
+                project_id,
                 project.objective_id,
                 project.objective_title,
                 tasks,
@@ -436,13 +582,73 @@ pub async fn get_project(
 }
 
 // GET /project/:project_id/row
-pub async fn get_project_row() {}
+pub async fn get_project_row(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(project_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let project_row = sqlx::query_as(r#"SELECT * from projects where project_id = $1"#)
+        .bind(&project_id)
+        .fetch_one(&pool)
+        .await;
+
+    match project_row {
+        Ok(project) => {
+            let template = templater::RowProjectTemplate::new(project);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Project Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /project/:project_id/form
-pub async fn get_project_form() {}
+pub async fn get_project_form(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(project_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let project_row = sqlx::query_as(r#"SELECT * from projects where project_id = $1"#)
+        .bind(&project_id)
+        .fetch_one(&pool)
+        .await;
+
+    match project_row {
+        Ok(project) => {
+            let template = templater::EditRowProjectTemplate::new(project);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Project Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /project/:project_id/tasks
-pub async fn get_project_tasks() {}
+pub async fn get_project_tasks(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(project_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let tasks: Option<Vec<model::Task>> = sqlx::query_as(
+        r#"SELECT *
+        FROM tasks
+        where tasks.project_id = $1
+        ORDER BY tasks.task_id;"#,
+    )
+    .bind(&project_id)
+    .fetch_all(&pool)
+    .await
+    .ok();
+    let template = templater::TableTasksTemplate::new(tasks.clone(), project_id);
+    templater::HtmlTemplate(template).into_response()
+}
 
 // GET /task/:task_id
 pub async fn get_task(
@@ -482,19 +688,137 @@ pub async fn get_task(
 }
 
 // GET /task/:task_id/row
-pub async fn get_task_row() {}
+pub async fn get_task_row(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(task_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let task_row = sqlx::query_as(r#"SELECT * from tasks where task_id = $1"#)
+        .bind(&task_id)
+        .fetch_one(&pool)
+        .await;
+
+    match task_row {
+        Ok(task) => {
+            let template = templater::RowTaskTemplate::new(task);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template =
+                templater::ErrorTemplate::new(StatusCode::NOT_FOUND, "Task Not Found".to_string());
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // GET /task/:task_id/form
-pub async fn get_task_form() {}
+pub async fn get_task_form(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(task_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let task_row = sqlx::query_as(r#"SELECT * from tasks where task_id = $1"#)
+        .bind(&task_id)
+        .fetch_one(&pool)
+        .await;
 
-// GET /measure/:measure_id
-pub async fn get_measure() {}
+    match task_row {
+        Ok(task) => {
+            let template = templater::EditRowTaskTemplate::new(task);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template =
+                templater::ErrorTemplate::new(StatusCode::NOT_FOUND, "Task Not Found".to_string());
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
-// GET /measurement/:measurement_id/row
-pub async fn get_measure_row() {}
+// // GET /measure/:measure_id
+// pub async fn get_measure(
+//     Extension(pool): Extension<PgPool>,
+//     extract::Path(measurement_id): extract::Path<i32>,
+// ) -> axum::response::Response {
+//     let project_row = sqlx::query!(
+//         r#"
+//         SELECT measurements.title, keyresults.keyresult_id, keyresults.title as keyresult_title
+//         FROM measurements
+//         LEFT JOIN keyresults
+//         ON measurements.keyresult_id = keyresults.keyresult_id
+//         WHERE measurements.measurement_id = $1;
+//         "#,
+//         measurement_id
+//     )
+//     .fetch_one(&pool)
+//     .await;
 
-// GET /measurement/:measurement_id/form
-pub async fn get_measure_form() {}
+//     match project_row {
+//         Ok(project) => {
+//             let template = templater::InitiativeTemplate::new(
+//                 project.title,
+//                 project.project_id,
+//                 project.objective_title,
+//             );
+//             templater::HtmlTemplate(template).into_response()
+//         }
+//         Err(_) => {
+//             let template = templater::ErrorTemplate::new(
+//                 StatusCode::NOT_FOUND,
+//                 "Key Result Not Found".to_string(),
+//             );
+//             templater::HtmlTemplate(template).into_response()
+//         }
+//     }
+// }
+
+// GET /measure/:measurement_id/row
+pub async fn get_measure_row(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(measurement_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let measurement_row = sqlx::query_as(r#"SELECT * from measurements where measurement_id = $1"#)
+        .bind(&measurement_id)
+        .fetch_one(&pool)
+        .await;
+
+    match measurement_row {
+        Ok(measurement) => {
+            let template = templater::RowMeasurementTemplate::new(measurement);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Measurement Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
+
+// GET /measure/:measurement_id/form
+pub async fn get_measure_form(
+    Extension(pool): Extension<PgPool>,
+    extract::Path(measurement_id): extract::Path<i32>,
+) -> axum::response::Response {
+    let measurement_row = sqlx::query_as(r#"SELECT * from measurements where measurement_id = $1"#)
+        .bind(&measurement_id)
+        .fetch_one(&pool)
+        .await;
+
+    match measurement_row {
+        Ok(measurement) => {
+            let template = templater::EditRowMeasurementTemplate::new(measurement);
+            templater::HtmlTemplate(template).into_response()
+        }
+        Err(_) => {
+            let template = templater::ErrorTemplate::new(
+                StatusCode::NOT_FOUND,
+                "Measurement Not Found".to_string(),
+            );
+            templater::HtmlTemplate(template).into_response()
+        }
+    }
+}
 
 // For non-existent routes
 pub async fn get_error_404_page() -> impl IntoResponse {
@@ -526,11 +850,9 @@ pub async fn add_objective(
         .bind(create_objective.theme_id)
         .fetch_all(&pool)
         .await;
-    // let new_title = create_objective.new_title;
     let theme_id = create_objective.theme_id;
     let uri = format!("/theme/{theme_id}/objectives");
     Redirect::to(&uri)
-    // format!("Adding objective (title: {new_title}, theme_id: {theme_id})").to_owned()
 }
 
 // POST /keyresult
@@ -612,7 +934,7 @@ pub async fn add_measure(
         .fetch_all(&pool)
         .await;
     let uri = format!(
-        "/keyresults/{keyresult_id}/measurements",
+        "/keyresults/{keyresult_id}/measures",
         keyresult_id = create_measurement.keyresult_id
     );
     Redirect::to(&uri)
@@ -654,12 +976,15 @@ pub async fn update_theme(
     extract::Path(theme_id): extract::Path<i32>,
     extract::Json(update_theme): extract::Json<model::UpdateTheme>,
 ) -> Redirect {
-    let _ = sqlx::query(r#"UPDATE themes SET title=$1, theme_status=$2 WHERE theme_id=$3"#)
-        .bind(update_theme.title)
-        .bind(update_theme.status)
-        .bind(theme_id)
-        .fetch_all(&pool)
-        .await;
+    let _: Result<model::Theme, sqlx::Error> = sqlx::query_as(
+        r#"UPDATE themes SET title=$1, theme_status=$2 WHERE theme_id=$3 RETURNING *"#,
+    )
+    .bind(update_theme.title)
+    .bind(update_theme.status)
+    .bind(theme_id)
+    .fetch_one(&pool)
+    .await;
+    // println!("{:#?}", query_result);
     let uri = format!("/theme/{theme_id}/row");
     Redirect::to(&uri)
 }
@@ -704,7 +1029,7 @@ pub async fn update_initiative(
         r#"UPDATE initiatives SET title=$1, initiative_status=$2 WHERE initiative_id=$3"#,
     )
     .bind(update_initiative.title)
-    .bind(update_initiative.initiative_status)
+    .bind(update_initiative.status)
     .bind(initiative_id)
     .fetch_all(&pool)
     .await;
@@ -720,7 +1045,7 @@ pub async fn update_project(
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE projects SET title=$1, project_status=$2 WHERE project_id=$3"#)
         .bind(update_project.title)
-        .bind(update_project.project_status)
+        .bind(update_project.status)
         .bind(project_id)
         .fetch_all(&pool)
         .await;
@@ -736,7 +1061,7 @@ pub async fn update_task(
 ) -> Redirect {
     let _ = sqlx::query(r#"UPDATE tasks SET title=$1, task_status=$2 WHERE project_id=$3"#)
         .bind(update_task.title)
-        .bind(update_task.task_status)
+        .bind(update_task.status)
         .bind(task_id)
         .fetch_all(&pool)
         .await;
