@@ -1,10 +1,10 @@
 <tr>
-  <td>
+  <td class="border border-slate-600">
     <div hx-boost="false">
       <a href="/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a>
     </div>
   </td>
-  <td>
+  <td class="border border-slate-600">
     {% match initiative.initiative_status %}
     {% when Status::NotStarted %}
     <span class="not_started">Not Started</span>
@@ -14,7 +14,7 @@
     <span class="completed">Completed</span>
     {% endmatch %}
   </td>
-  <td>
+  <td class="border border-slate-600">
     <button class="btn btn-danger" hx-get="/initiative/{{ initiative.initiative_id }}/form" hx-trigger="edit" _="on click
       if .editing is not empty
         Swal.fire({title: 'Already Editing',
@@ -29,8 +29,6 @@
       trigger edit">
       Edit
     </button>
-  </td>
-  <td>
     <button class="btn btn-danger" hx-delete="/initiative/{{ initiative.initiative_id }}" hx-trigger="delete" _="on click
     Swal.fire({
       title: 'Are you sure?',

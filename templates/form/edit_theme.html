@@ -1,19 +1,21 @@
 <tr hx-trigger='cancel' class='editing' hx-get="/theme/{{ theme.theme_id }}/row">
-    <td><input name='title' value='{{ theme.title }}'></td>
+    <td class="border border-slate-600"><input name='title' value='{{ theme.title }}'></td>
     <td class="dropdown">
         <form action="" name="FILTER">
-            <select name="status" >
+            <select name="status">
                 <option value="NotStarted">Not Started</option>
                 <option value="InProgress">In Progress</option>
                 <option value="Completed">Completed</option>
             </select>
         </form>
     </td>
-    <td>
-        <button class="btn btn-danger" hx-get="/theme/{{ theme.theme_id }}/row">
+    <td class="border border-slate-600">
+        <button class="btn btn-danger bg-red-600 hover:bg-red-700 px-5 py-3 text-white rounded-lg"
+            hx-get="/theme/{{ theme.theme_id }}/row">
             Cancel
         </button>
-        <button class="btn btn-danger" hx-put="/theme/{{ theme.theme_id }}" hx-include="closest tr">
+        <button class="btn btn-danger bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-lg"
+            hx-put="/theme/{{ theme.theme_id }}" hx-include="closest tr">
             Save
         </button>
     </td>

@@ -1,10 +1,10 @@
 <tr>
-  <td>
+  <td class="border border-slate-600">
     <div hx-boost="false">
       <a href="/project/{{ project.project_id }}">{{ project.title }}</a>
     </div>
   </td>
-  <td>
+  <td class="border border-slate-600">
     {% match project.project_status %}
     {% when Status::NotStarted %}
     <span class="not_started">Not Started</span>
@@ -14,7 +14,7 @@
     <span class="completed">Completed</span>
     {% endmatch %}
   </td>
-  <td>
+  <td class="border border-slate-600">
     <button class="btn btn-danger" hx-get="/project/{{ project.project_id }}/form" hx-trigger="edit" _="on click
       if .editing is not empty
         Swal.fire({title: 'Already Editing',

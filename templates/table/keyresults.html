@@ -3,7 +3,7 @@
     {% when Some with (keyresults) %}
     {% let keyresults_len = keyresults.len() %}
     {% if keyresults_len > 0 %}
-    <table>
+    <table class="table-fixed border-2 border-slate-800">
         <thead>
             <th>Key Result</th>
             <th>Actions</th>
@@ -23,7 +23,7 @@
     <br>
     <h3>Add key result</h3>
     <form hx-post="/keyresult" hx-target="#keyresults_response" hx-vals='{"objective_id": {{ objective_id }} }'>
-    <label for="title">Title:</label><input type="text" id="title" name="title"><br>
-    <button type="submit">Create Key Result</button>
-</form>
+        <label for="title">Title:</label><input type="text" id="title" name="title"><br>
+        <button type = "submit" class="bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-lg">Create Key Result</button>
+    </form>
 </div>

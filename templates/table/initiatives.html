@@ -3,7 +3,7 @@
     {% when Some with (initiatives) %}
     {% let initiatives_len = initiatives.len() %}
     {% if initiatives_len > 0 %}
-    <table>
+    <table class="table-fixed border-2 border-slate-800">
         <thead>
             <th>Initiative</th>
             <th>Status</th>
@@ -25,6 +25,6 @@
     <h3>Add initiative</h3>
     <form hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'>
         <label for="title">Title:</label><input type="text" id="title" name="title"><br>
-        <button type="submit">Create Initiative</button>
+        <button type = "submit" class="bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-lg">Create Initiative</button>
     </form>
 </div>

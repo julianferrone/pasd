@@ -1,10 +1,10 @@
 <tr hx-trigger='cancel' class='editing' hx-get="/objective/{{objective.objective_id}}/row">
-    <td><input name='title' value='{{ objective.title }}'></td>
-    <td>
-        <button class="btn btn-danger" hx-get="/objective/{{ objective.objective_id }}/row">
+    <td class="border border-slate-600"><input name='title' value='{{ objective.title }}'></td>
+    <td class="border border-slate-600">
+        <button class="btn btn-danger bg-red-600 hover:bg-red-700 px-5 py-3 text-white rounded-lg" hx-get="/objective/{{ objective.objective_id }}/row">
             Cancel
         </button>
-        <button class="btn btn-danger" hx-put="/objective/{{ objective.objective_id }}" hx-include="closest tr">
+        <button class="btn btn-danger bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-lg" hx-put="/objective/{{ objective.objective_id }}" hx-include="closest tr">
             Save
         </button>
     </td>

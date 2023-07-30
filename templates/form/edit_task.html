@@ -1,5 +1,5 @@
 <tr hx-trigger='cancel' class='editing' hx-get="/task/{{task.task_id}}/row">
-    <td><input name='title' value='{{ task.title }}'></td>
+    <td class="border border-slate-600"><input name='title' value='{{ task.title }}'></td>
     <td class="dropdown">
         <form action="" name="FILTER">
             <select name="status" >
@@ -9,11 +9,11 @@
             </select>
         </form>
     </td>
-    <td>
-        <button class="btn btn-danger" hx-get="/task/{{ task.task_id }}/row">
+    <td class="border border-slate-600">
+        <button class="btn btn-danger bg-red-600 hover:bg-red-700 px-5 py-3 text-white rounded-lg" hx-get="/task/{{ task.task_id }}/row">
             Cancel
         </button>
-        <button class="btn btn-danger" hx-put="/task/{{ task.task_id }}" hx-include="closest tr">
+        <button class="btn btn-danger bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-lg" hx-put="/task/{{ task.task_id }}" hx-include="closest tr">
             Save
         </button>
     </td>
