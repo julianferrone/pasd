@@ -4,14 +4,11 @@
 
 {% block content %}
 <h1>Objective: {{ title }}</h1>
-<h2>Theme: <a href="/theme/{{ theme_id }}">{{ theme_title }}</a></h2>
-
+<h2>Theme: <a href="/theme/{{ theme_id }}" class="text-sky-700">{{ theme_title }}</a></h2>
 <h2>Key Results</h2>
 {% include "table/keyresults.html" %}
-
 <h2>Initiatives</h2>
 {% include "table/initiatives.html" %}
-
 <h2>Projects</h2>
 {% include "table/projects.html" %}
 {% endblock %}

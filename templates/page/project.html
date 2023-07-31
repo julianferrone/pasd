@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Project: {{ title }}</h1>
-<h2>Objective: <a href="/objective/{{ objective_id }}">{{ objective_title }}</a></h2>
+<h2>Objective: <a href="/objective/{{ objective_id }}" class="text-sky-700">{{ objective_title }}</a></h2>
 <h2>Tasks</h2>
 {% include "table/tasks.html" %}
 {% endblock %}
