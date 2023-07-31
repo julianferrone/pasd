@@ -1,20 +1,20 @@
 <tr hx-trigger='cancel' class='editing' hx-get="/initiative/{{ initiative.initiative_id }}/row">
-  <td class="border border-slate-600"><input name='title' value='{{ initiative.title }}'></td>
+  <td><input name='title' value='{{ initiative.title }}'></td>
   <td class="dropdown">
     <form action="" name="FILTER">
       <select name="status">
-        <option value="NotStarted">Not Started</option>
-        <option value="InProgress">In Progress</option>
-        <option value="Completed">Completed</option>
+        <option value="NotStarted" class="bg-slate-300">Not Started</option>
+        <option value="InProgress" class="bg-amber-300">In Progress</option>
+        <option value="Completed" class="bg-lime-300">Completed</option>
       </select>
     </form>
   </td>
-  <td class="border border-slate-600">
+  <td>
     <button class="btn btn-danger bg-red-600 hover:bg-red-700 px-5 py-3 text-white rounded-lg"
       hx-get="/initiative/{{ initiative.initiative_id }}/row">
       Cancel
     </button>
-    <button class="btn btn-danger bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-lg"
+    <button class="btn btn-danger bg-lime-600 hover:bg-lime-700 px-5 py-3 text-white rounded-lg"
       hx-put="/initiative/{{ initiative.initiative_id }}" hx-include="closest tr">
       Save
     </button>
