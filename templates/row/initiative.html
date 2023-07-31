@@ -1,21 +1,28 @@
 <tr>
-  <td class="border border-slate-600">
+  <td class=" w-4/6">
     <div hx-boost="false">
-      <a href="/initiative/{{ initiative.initiative_id }}">{{ initiative.title }}</a>
+      <a href="/initiative/{{ initiative.initiative_id }}" class="text-sky-700">{{ initiative.title }}</a>
     </div>
   </td>
-  <td class="border border-slate-600">
+  <td class=" w-1/6">
     {% match initiative.initiative_status %}
     {% when Status::NotStarted %}
-    <span class="not_started">Not Started</span>
+    <span
+      class="inline-block whitespace-nowrap rounded-full bg-slate-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-sm align-baseline font-bold leading-none text-slate-700">Not
+      Started</span>
     {% when Status::InProgress %}
-    <span class="in_progress">In Progress</span>
+    <span
+      class="inline-block whitespace-nowrap rounded-full bg-amber-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-sm align-baseline font-bold leading-none text-amber-700">In
+      Progress</span>
     {% when Status::Completed %}
-    <span class="completed">Completed</span>
+    <span
+      class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-sm align-baseline font-bold leading-none text-lime-700">Completed</span>
     {% endmatch %}
   </td>
-  <td class="border border-slate-600">
-    <button class="btn btn-danger" hx-get="/initiative/{{ initiative.initiative_id }}/form" hx-trigger="edit" _="on click
+  <td class=" w-1/6">
+    <button
+      class="btn btn-danger middle none center rounded-lg bg-sky-300 pb-[0.25em] pt-[0.35em] font-sans text-sm font-bold text-sky-700 transition-all focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+      data-ripple-light="true" hx-get="/initiative/{{ initiative.initiative_id }}/form" hx-trigger="edit" _="on click
       if .editing is not empty
         Swal.fire({title: 'Already Editing',
                   showCancelButton: true,
@@ -29,7 +36,9 @@
       trigger edit">
       Edit
     </button>
-    <button class="btn btn-danger" hx-delete="/initiative/{{ initiative.initiative_id }}" hx-trigger="delete" _="on click
+    <button
+      class="btn btn-danger middle none center rounded-lg bg-red-300 pb-[0.25em] pt-[0.35em] font-sans text-sm font-bold text-red-700 transition-all focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+      data-ripple-light="true" hx-delete="/initiative/{{ initiative.initiative_id }}" hx-trigger="delete" _="on click
     Swal.fire({
       title: 'Are you sure?',
       text: 'You won\'t be able to revert this!',
@@ -42,7 +51,7 @@
       halt
     end
     trigger delete">
-    Delete
-  </button>
+      Delete
+    </button>
   </td>
 </tr>
