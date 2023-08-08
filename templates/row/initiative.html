@@ -1,6 +1,6 @@
 <tr class="border-slate-400 border-solid border-x-2 border-b-2">
     <td>
-        <div class="flex h-12 items-center justify-center">
+        <div class="grid place-items-center h-12">
             <button class="btn btn-danger middle none center transition-all ml-1" data-ripple-light="true"
                 hx-get="/initiative/{{ initiative.initiative_id }}/form" hx-trigger="edit" _="on click
                 if .editing-initiative is not empty
@@ -18,7 +18,7 @@
                     if the result's isConfirmed is false
                     halt
                     end
-                send cancel to .editing
+                send cancel to .editing-initiative
                 end
                 trigger edit">
                 <svg viewBox="0 0 22 22"

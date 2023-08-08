@@ -1,58 +1,70 @@
-<tr>
-    <td class="flex flex-row">
-        <button class="btn btn-danger" hx-get="/task/{{ task.task_id }}/form" hx-trigger="edit" _="on click
-            if .editing-task is not empty
-                Swal.fire({
-                    title: 'Already Editing',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yep, Edit This Task!',
-                    text:'Hey!  You are already editing a task!  Do you want to cancel that edit and continue?',
-                    buttonsStyling: false,
-                    customClass: {
-                        cancelButton: 'btn btn-danger border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1',
-                        confirmButton: 'btn btn-danger border-solid border-2 border-lime-600 text-lime-600 hover:border-lime-800 hover:text-lime-800 hover:bg-lime-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1'
-                    }
-                })
-            if the result's isConfirmed is false
-                halt
-            end
-            send cancel to .editing-task
-            end
-            trigger edit">
-            <svg viewBox="0 0 22 22"
-                class="w-12 h-12 p-1 stroke-0 stroke-slate-400 hover:stroke-slate-700 fill-slate-400 hover:fill-slate-700 mr-1">
-                <path
-                    d="M 21,10.21047 V 20 H -2.3e-7 V 0.42094984 H 10.5 V 2.3788499 H 2.1000001 V 18.04209 H 18.9 V 10.21047 Z M 7.3500001,10.51395 15.7731,2.6451299 17.4048,4.6431699 8.8819501,13.14733 h -1.53195 z m -2.1,4.59129 h 4.5318 L 20.18415,4.6451299 15.8298,-1.6e-7 5.2500001,9.6877099 Z" />
-            </svg>
-        </button>
-        <button class="btn btn-danger" hx-delete="/task/{{ task.task_id }}" hx-trigger="delete" _="on click
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You won\'t be able to revert this!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Delete task \'{{ task.title }}\'',
-                buttonsStyling: false,
-                customClass: {
-                    cancelButton: 'btn btn-danger border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1',
-                    confirmButton: 'btn btn-danger border-solid border-2 border-lime-600 text-lime-600 hover:border-lime-800 hover:text-lime-800 hover:bg-lime-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1'
-                }
-            })
-            if the result's isConfirmed is false
-                halt
-            end
-            trigger delete">
-            <svg viewBox="0 0 22 22"
-                class="w-12 h-12 p-1 stroke-0 stroke-slate-400 hover:stroke-slate-700 fill-slate-400 hover:fill-slate-700 mr-1">
-                <path fill-rule="evenodd"
-                    d="m 7.3499999,16 h 2.1 V 8.0000001 h -2.1 z M 11.55,16 h 2.1 V 8.0000001 h -2.1 z M 5.2499999,18 H 15.75 V 6.0000001 H 5.2499999 Z m 2.1,-13.9999999 H 13.65 V 1.9999998 H 7.3499999 Z m 8.4000001,0 V -1.5e-7 H 5.2499999 V 4.0000001 h -5.25 v 2 h 3.15 V 20 H 17.85 V 6.0000001 H 21 v -2 z" />
-            </svg>
-        </button>
-        <div>
-            {{ task.title }}
+<tr class="border-slate-400 border-solid border-x-2 border-b-2">
+    <td>
+        <div class="grid place-items-center h-12">
+            <button class="btn btn-danger middle none center transition-all ml-1" data-ripple-light="true"
+                hx-get="/task/{{ task.task_id }}/form" hx-trigger="edit" _="on click
+                if .editing-task is not empty
+                    Swal.fire({
+                        title: 'Already Editing',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yep, Edit This Task!',
+                        text:'Hey!  You are already editing a task!  Do you want to cancel that edit and continue?',
+                        buttonsStyling: false,
+                        customClass: {
+                            cancelButton: 'btn btn-danger border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1',
+                            confirmButton: 'btn btn-danger border-solid border-2 border-lime-600 text-lime-600 hover:border-lime-800 hover:text-lime-800 hover:bg-lime-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1'
+                        }
+                    })
+                    if the result's isConfirmed is false
+                    halt
+                    end
+                send cancel to .editing-task
+                end
+                trigger edit">
+                <svg viewBox="0 0 22 22"
+                    class="w-12 h-12 p-1.5 stroke-0 stroke-slate-400 hover:stroke-slate-700 fill-slate-400 hover:fill-slate-700">
+                    <path
+                        d="M 21,10.21047 V 20 H -2.3e-7 V 0.42094984 H 10.5 V 2.3788499 H 2.1000001 V 18.04209 H 18.9 V 10.21047 Z M 7.3500001,10.51395 15.7731,2.6451299 17.4048,4.6431699 8.8819501,13.14733 h -1.53195 z m -2.1,4.59129 h 4.5318 L 20.18415,4.6451299 15.8298,-1.6e-7 5.2500001,9.6877099 Z" />
+                </svg>
+            </button>
         </div>
     </td>
     <td>
+        <div class="grid place-items-center h-12">
+            <button class="btn btn-danger middle none center transition-all mx-1" data-ripple-light="true"
+                hx-delete="/task/{{ task.task_id }}" hx-trigger="delete" _="on click
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete task \'{{ task.title }}\'',
+                    buttonsStyling: false,
+                    customClass: {
+                        cancelButton: 'btn btn-danger border-solid border-2 border-sky-600 text-sky-600 hover:border-sky-800 hover:text-sky-800 hover:bg-sky-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1',
+                        confirmButton: 'btn btn-danger border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1'
+                    }
+                })
+                if the result's isConfirmed is false
+                    halt
+                end
+                trigger delete">
+                <svg viewBox="0 0 22 22"
+                    class="w-12 h-12 p-1.5 stroke-0 stroke-slate-400 hover:stroke-slate-700 fill-slate-400 hover:fill-slate-700">
+                    <path fill-rule="evenodd"
+                        d="m 7.3499999,16 h 2.1 V 8.0000001 h -2.1 z M 11.55,16 h 2.1 V 8.0000001 h -2.1 z M 5.2499999,18 H 15.75 V 6.0000001 H 5.2499999 Z m 2.1,-13.9999999 H 13.65 V 1.9999998 H 7.3499999 Z m 8.4000001,0 V -1.5e-7 H 5.2499999 V 4.0000001 h -5.25 v 2 h 3.15 V 20 H 17.85 V 6.0000001 H 21 v -2 z" />
+                </svg>
+            </button>
+        </div>
+    </td>
+    <td class="px-4">
+        <div hx-boost="false">
+            <a href="/task/{{ task.task_id }}"
+                class="text-sky-700 flex items-center justify-normal hover:underline mr-1">{{ task.title }}
+            </a>
+        </div>
+    </td>
+    <td class="px-4">
         {% match task.task_status %}
         {% when Status::NotStarted %}
         <span
