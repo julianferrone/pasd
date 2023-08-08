@@ -1,20 +1,5 @@
 <tr>
-  <td class="border border-slate-600">
-    <div>
-      {{ task.title }}
-    </div>
-  </td>
-  <td class="border border-slate-600">
-    {% match task.task_status %}
-    {% when Status::NotStarted %}
-    <span class="not_started">Not Started</span>
-    {% when Status::InProgress %}
-    <span class="in_progress">In Progress</span>
-    {% when Status::Completed %}
-    <span class="completed">Completed</span>
-    {% endmatch %}
-  </td>
-  <td class="border border-slate-600">
+  <td class="flex flex-row">
     <button class="btn btn-danger" hx-get="/task/{{ task.task_id }}/form" hx-trigger="edit" _="on click
       if .editing is not empty
         Swal.fire({title: 'Already Editing',
@@ -35,14 +20,31 @@
         text: 'You won\'t be able to revert this!',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33000',
-        confirmButtonText: 'Delete \'{{ task.title }}\''})
+        confirmButtonText: 'Delete \'{{ task.title }}\'',
+        buttonsStyling: false,
+        customClass: {
+          cancelButton: 'btn btn-danger border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1',
+          confirmButton: 'btn btn-danger border-solid border-2 border-lime-600 text-lime-600 hover:border-lime-800 hover:text-lime-800 hover:bg-lime-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline mx-1'
+        }
+      })
       if the result's isConfirmed is false
         halt
       end
       trigger delete">
       Delete
     </button>
+    <div>
+      {{ task.title }}
+    </div>
+  </td>
+  <td>
+    {% match task.task_status %}
+    {% when Status::NotStarted %}
+    <span class="bg-slate-300">Not Started</span>
+    {% when Status::InProgress %}
+    <span class="bg-amber-300">In Progress</span>
+    {% when Status::Completed %}
+    <span class="bg-lime-300">Completed</span>
+    {% endmatch %}
   </td>
 </tr>
