@@ -3,9 +3,11 @@
     {% when Some with (measurements) %}
     {% let measurements_len = measurements.len() %}
     {% if measurements_len > 0 %}
-    <table class="table-fixed border-2 border-slate-800 min-w-full">
-        <thead>
-            <th class="w-full">Measurement</th>
+    <table class="min-w-full">
+        <thead class="table-auto bg-slate-700 text-white border-slate-700 border-2 border-solid h-14">
+            <th class="w-12 text-center">Edit</th>
+            <th class="w-12 text-center">Trash</th>
+            <th class="w-max text-left px-4">Objective</th>
         </thead>
         <tbody hx-target="closest tr" hx-swap="outerHTML">
             {% for measurement in measurements %}

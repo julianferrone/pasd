@@ -3,10 +3,12 @@
     {% when Some with (themes) %}
     {% let themes_len = themes.len() %}
     {% if themes_len > 0 %}
-    <table class="table-fixed border-2 border-slate-800 min-w-full">
-        <thead>
-            <th class="w-5/6">Theme</th>
-            <th class="w-1/6">Status</th>
+    <table class="min-w-full">
+        <thead class="table-auto bg-slate-700 text-white border-slate-700 border-2 border-solid h-14">
+            <th class="w-12 text-center">Edit</th>
+            <th class="w-12 text-center">Trash</th>
+            <th class="w-max text-left px-4">Theme</th>
+            <th class="w-1/6 text-left px-4">Status</th>
         </thead>
         <tbody hx-target="closest tr" hx-swap="outerHTML">
             {% for theme in themes %}
