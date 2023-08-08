@@ -9,34 +9,34 @@ use model::Status;
 // ROOT TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/root.html")]
-pub struct RootTemplate {
+pub struct PageRootTemplate {
     pub themes: Option<Vec<model::Theme>>,
 }
 
-impl RootTemplate {
-    pub fn new(themes: Option<Vec<model::Theme>>) -> RootTemplate {
-        RootTemplate { themes }
+impl PageRootTemplate {
+    pub fn new(themes: Option<Vec<model::Theme>>) -> PageRootTemplate {
+        PageRootTemplate { themes }
     }
 }
 
 // THEME TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/theme.html")]
-pub struct ThemeTemplate {
+pub struct PageThemeTemplate {
     pub title: String,
     pub theme_id: i32,
     pub theme_status: model::Status,
     pub objectives: Option<Vec<model::Objective>>,
 }
 
-impl ThemeTemplate {
+impl PageThemeTemplate {
     pub fn new(
         title: String,
         theme_id: i32,
         theme_status: model::Status,
         objectives: Option<Vec<model::Objective>>,
-    ) -> ThemeTemplate {
-        ThemeTemplate {
+    ) -> PageThemeTemplate {
+        PageThemeTemplate {
             title: title,
             theme_id: theme_id,
             theme_status: theme_status,
@@ -84,7 +84,7 @@ impl EditRowThemeTemplate {
 // OBJECTIVE TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/objective.html")]
-pub struct ObjectiveTemplate {
+pub struct PageObjectiveTemplate {
     pub title: String,
     pub objective_id: i32,
     pub theme_id: i32,
@@ -94,7 +94,7 @@ pub struct ObjectiveTemplate {
     pub projects: Option<Vec<model::Project>>,
 }
 
-impl ObjectiveTemplate {
+impl PageObjectiveTemplate {
     pub fn new(
         title: String,
         objective_id: i32,
@@ -103,8 +103,8 @@ impl ObjectiveTemplate {
         keyresults: Option<Vec<model::KeyResult>>,
         initiatives: Option<Vec<model::Initiative>>,
         projects: Option<Vec<model::Project>>,
-    ) -> ObjectiveTemplate {
-        ObjectiveTemplate {
+    ) -> PageObjectiveTemplate {
+        PageObjectiveTemplate {
             title,
             objective_id,
             theme_id,
@@ -162,7 +162,7 @@ impl EditRowObjectiveTemplate {
 // KEY RESULT TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/keyresult.html")]
-pub struct KeyResultTemplate {
+pub struct PageKeyResultTemplate {
     pub title: String,
     pub keyresult_id: i32,
     pub objective_id: i32,
@@ -170,15 +170,15 @@ pub struct KeyResultTemplate {
     pub measurements: Option<Vec<model::Measurement>>,
 }
 
-impl KeyResultTemplate {
+impl PageKeyResultTemplate {
     pub fn new(
         title: String,
         objective_id: i32,
         keyresult_id: i32,
         objective_title: String,
         measurements: Option<Vec<model::Measurement>>,
-    ) -> KeyResultTemplate {
-        KeyResultTemplate {
+    ) -> PageKeyResultTemplate {
+        PageKeyResultTemplate {
             title,
             keyresult_id,
             objective_id,
@@ -234,15 +234,15 @@ impl EditRowKeyResultTemplate {
 // INITIATIVE TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/initiative.html")]
-pub struct InitiativeTemplate {
+pub struct PageInitiativeTemplate {
     pub title: String,
     pub objective_id: i32,
     pub objective_title: String,
 }
 
-impl InitiativeTemplate {
-    pub fn new(title: String, objective_id: i32, objective_title: String) -> InitiativeTemplate {
-        InitiativeTemplate {
+impl PageInitiativeTemplate {
+    pub fn new(title: String, objective_id: i32, objective_title: String) -> PageInitiativeTemplate {
+        PageInitiativeTemplate {
             title,
             objective_id,
             objective_title,
@@ -296,7 +296,7 @@ impl EditRowInitiativeTemplate {
 // PROJECT TEMPLATES
 #[derive(askama::Template)]
 #[template(path = "page/project.html")]
-pub struct ProjectTemplate {
+pub struct PageProjectTemplate {
     pub title: String,
     pub project_id: i32,
     pub objective_id: i32,
@@ -304,15 +304,15 @@ pub struct ProjectTemplate {
     pub tasks: Option<Vec<model::Task>>,
 }
 
-impl ProjectTemplate {
+impl PageProjectTemplate {
     pub fn new(
         title: String,
         project_id: i32,
         objective_id: i32,
         objective_title: String,
         tasks: Option<Vec<model::Task>>,
-    ) -> ProjectTemplate {
-        ProjectTemplate {
+    ) -> PageProjectTemplate {
+        PageProjectTemplate {
             title,
             project_id,
             objective_id,
