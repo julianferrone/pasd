@@ -4,7 +4,21 @@
 
 {% block content %}
 <h1>Theme: {{ title }}</h1>
-<h2>Status: {{ theme_status }} </h2>
+<h2>Status:
+    {% match theme_status %}
+    {% when Status::NotStarted %}
+    <span
+        class="inline-block whitespace-nowrap rounded-full bg-slate-300 px-[0.65em] pb-[0.25em] pt-[0.25em] text-center align-baseline font-bold leading-none text-slate-700">Not
+        Started</span>
+    {% when Status::InProgress %}
+    <span
+        class="inline-block whitespace-nowrap rounded-full bg-amber-300 px-[0.65em] pb-[0.25em] pt-[0.25em] text-center align-baseline font-bold leading-none text-amber-700">In
+        Progress</span>
+    {% when Status::Completed %}
+    <span
+        class="inline-block whitespace-nowrap rounded-full bg-lime-300 px-[0.65em] pb-[0.25em] pt-[0.25em] text-center align-baseline font-bold leading-none text-lime-700">Completed</span>
+    {% endmatch %}
+</h2>
 <h2>Objectives</h2>
 {% include "table/objectives.html" %}
 {% endblock %}
