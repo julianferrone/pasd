@@ -20,17 +20,17 @@
     {% when None %}
     <p>Error when retrieving the initiative rows from database.</p>
     {% endmatch %}
-    <h3 class="mt-5">Add initiative</h3>
+    <h3 class="mt-6">Add Initiative</h3>
     <form class="" hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'>
         <label for="title"
-            class="mt-2 block text-sm text-slate-500 duration-300 peer-focus:text-sky-600 peer-placeholder-shown:scale-100">
+            class="block text-sm text-slate-900 duration-300 font-bold">
             Initiative Title
         </label>
         <input type="text" id="title" name="title"
-            class="my-2 w-1/2 block bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-sky-600 focus:border-sky-500"
+            class="my-2 w-1/2 block bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:border-sky-600"
             placeholder="Initiative Title" />
         <button type="submit"
-            class="mb-8 btn btn-danger block border-solid border-2 border-sky-600 text-sky-600 hover:border-sky-800 hover:text-sky-800 hover:bg-sky-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline">Create
+            class="btn btn-danger block border-solid border-2 border-sky-600 text-sky-600 hover:border-sky-800 hover:text-sky-800 hover:bg-sky-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline">Create
             Initiative</button>
     </form>
 </div>
