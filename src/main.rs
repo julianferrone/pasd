@@ -9,13 +9,14 @@ use sqlx::postgres::PgPoolOptions;
 use std::fs;
 use std::net::SocketAddr;
 use tower::ServiceBuilder;
+use tower_http::services::fs::ServeDir;
 use tower_http::trace;
 use tracing;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 pub mod errors;
 pub mod handlers;
-use handlers::{assets, data, hypermedia};
+use handlers::{data, hypermedia};
 pub mod model;
 pub mod templater;
 
@@ -135,15 +136,16 @@ fn get_hypermedia_routes() -> Router {
     hypermedia_router
 }
 
-fn get_static_asset_routes() -> Router {
-    let static_assets_router = Router::new()
-        .route("/img/favicon.ico", get(assets::favicon))
-        .route("/js/json-enc.js", get(assets::htmx_ext_json_js))
-        .route("/js/htmx.min.js", get(assets::htmx_js))
-        .route("/js/hyperscript.min.js", get(assets::hyperscript_js))
-        .route("/js/sweetalert2.min.js", get(assets::sweetalert_2_js));
-    static_assets_router
-}
+// fn get_static_asset_routes() -> Router {
+//     let static_assets_router = Router::new()
+//         .route("/img/favicon.ico", get(assets::favicon))
+//         .route("/css/output.css", get(assets::stylesheet))
+//         .route("/js/json-enc.js", get(assets::htmx_ext_json_js))
+//         .route("/js/htmx.min.js", get(assets::htmx_js))
+//         .route("/js/hyperscript.min.js", get(assets::hyperscript_js))
+//         .route("/js/sweetalert2.min.js", get(assets::sweetalert_2_js));
+//     static_assets_router
+// }
 
 fn get_data_routes() -> Router {
     let data_router = Router::new()
@@ -153,7 +155,7 @@ fn get_data_routes() -> Router {
         .route("/initiative", get(data::get_all_initiatives))
         .route("/project", get(data::get_all_projects))
         .route("/task", get(data::get_all_tasks))
-        .route("/measurement", get(data::get_all_measures));
+        .route("/measure", get(data::get_all_measures));
     data_router
 }
 
@@ -192,7 +194,7 @@ async fn main() -> Result<(), String> {
     let app = Router::new()
         .nest("/", get_hypermedia_routes())
         .nest("/api", get_data_routes())
-        .nest("/static", get_static_asset_routes())
+        .nest_service("/static", ServeDir::new("static"))
         // .fallback(hypermedia::get_error_404_page)
         .layer(
             ServiceBuilder::new()
