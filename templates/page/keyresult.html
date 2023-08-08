@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Key Result: {{ title }}</h1>
-<h2>Objective: <a href="/objective/{{ objective_id }}" class="text-sky-700">{{ objective_title }}</a></h2>
+<h2>Objective: <a href="/objective/{{ objective_id }}" class="text-sky-700 items-center justify-normal hover:underline mr-1">{{ objective_title }}</a></h2>
 <h2>Measurements</h2>
 {% include "table/measurements.html" %}
 {% endblock %}
