@@ -9,35 +9,25 @@ use sqlx::PgPool;
 
 // GET /
 pub async fn get_root(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
-    let sql = "SELECT * from themes".to_string();
+    let sql = "SELECT * FROM themes".to_string();
 
     let themes = sqlx::query_as::<_, model::Theme>(&sql)
         .fetch_all(&pool)
         .await;
 
-    let template = templater::RootTemplate::new(themes.ok().clone());
+    let template = templater::PageRootTemplate::new(themes.ok());
     templater::HtmlTemplate(template).into_response()
 }
 
-// macro_rules! get_all_from_table{
-//     ($table_name:expr, $struct:item)=>{
-//         pub async fn get_all_$table_name(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
-//             let sql = format!("SELECT * from {table_name}").to_string();
-//             let $table_name = sql::query_as::<_,
-//         }
-//     }
-// }
-// get_all_from_table!("themes".to_string(), model::Theme);
-
 // GET /theme
 pub async fn get_root_themes(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
-    let sql = "SELECT * from themes".to_string();
+    let sql = "SELECT * FROM themes".to_string();
 
     let themes = sqlx::query_as::<_, model::Theme>(&sql)
         .fetch_all(&pool)
         .await;
 
-    let template = templater::TableThemesTemplate::new(themes.ok().clone());
+    let template = templater::TableThemesTemplate::new(themes.ok());
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -47,7 +37,7 @@ pub async fn get_theme(
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
     let theme_row: Result<model::Theme, sqlx::Error> =
-        sqlx::query_as(r#"SELECT * from themes where theme_id = $1"#)
+        sqlx::query_as(r#"SELECT * FROM themes WHERE theme_id = $1"#)
             .bind(&theme_id)
             .fetch_one(&pool)
             .await;
@@ -55,20 +45,17 @@ pub async fn get_theme(
     match theme_row {
         Ok(theme) => {
             let objectives: Option<Vec<model::Objective>> = sqlx::query_as(
-                r#"SELECT *
-                FROM objectives
-                where objectives.theme_id = $1
-                ORDER BY objectives.objective_id;"#,
+                r#"SELECT * FROM objectives WHERE theme_id = $1 ORDER BY objective_id;"#,
             )
             .bind(&theme_id)
             .fetch_all(&pool)
             .await
             .ok();
-            let template = templater::ThemeTemplate::new(
+            let template = templater::PageThemeTemplate::new(
                 theme.title,
                 theme_id,
                 theme.theme_status,
-                objectives.clone(),
+                objectives,
             );
             templater::HtmlTemplate(template).into_response()
         }
@@ -85,7 +72,7 @@ pub async fn get_theme_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let theme_row = sqlx::query_as(r#"SELECT * from themes where theme_id = $1"#)
+    let theme_row = sqlx::query_as(r#"SELECT * FROM themes WHERE theme_id = $1"#)
         .bind(&theme_id)
         .fetch_one(&pool)
         .await;
@@ -108,7 +95,7 @@ pub async fn get_theme_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let theme_row = sqlx::query_as(r#"SELECT * from themes where theme_id = $1"#)
+    let theme_row = sqlx::query_as(r#"SELECT * FROM themes WHERE theme_id = $1"#)
         .bind(&theme_id)
         .fetch_one(&pool)
         .await;
@@ -131,17 +118,13 @@ pub async fn get_theme_objectives(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let objectives: Option<Vec<model::Objective>> = sqlx::query_as(
-        r#"SELECT *
-        FROM objectives
-        where objectives.theme_id = $1
-        ORDER BY objectives.objective_id;"#,
-    )
-    .bind(&theme_id)
-    .fetch_all(&pool)
-    .await
-    .ok();
-    let template = templater::TableObjectivesTemplate::new(objectives.clone(), theme_id);
+    let objectives: Option<Vec<model::Objective>> =
+        sqlx::query_as(r#"SELECT * FROM objectives WHERE theme_id = $1 ORDER BY objective_id;"#)
+            .bind(&theme_id)
+            .fetch_all(&pool)
+            .await
+            .ok();
+    let template = templater::TableObjectivesTemplate::new(objectives, theme_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -153,10 +136,10 @@ pub async fn get_objective(
     let objective_row = sqlx::query!(
         r#"
         SELECT objectives.title, themes.theme_id, themes.title as theme_title 
-        from objectives 
+        FROM objectives 
         LEFT JOIN themes 
         ON objectives.theme_id = themes.theme_id 
-        where objectives.objective_id = $1;
+        WHERE objectives.objective_id = $1;
         "#,
         objective_id
     )
@@ -166,10 +149,7 @@ pub async fn get_objective(
     match objective_row {
         Ok(obj) => {
             let kr_rows: Option<Vec<model::KeyResult>> = sqlx::query_as(
-                r#"SELECT *
-                FROM keyresults
-                where keyresults.objective_id = $1
-                ORDER BY keyresults.keyresult_id;"#,
+                r#"SELECT * FROM keyresults WHERE objective_id = $1 ORDER BY keyresult_id;"#,
             )
             .bind(&objective_id)
             .fetch_all(&pool)
@@ -177,10 +157,7 @@ pub async fn get_objective(
             .ok();
 
             let ini_rows: Option<Vec<model::Initiative>> = sqlx::query_as(
-                r#"SELECT *
-                FROM initiatives
-                where initiatives.objective_id = $1
-                ORDER BY initiatives.initiative_id;"#,
+                r#"SELECT * FROM initiatives WHERE objective_id = $1 ORDER BY initiative_id;"#,
             )
             .bind(&objective_id)
             .fetch_all(&pool)
@@ -188,16 +165,13 @@ pub async fn get_objective(
             .ok();
 
             let proj_rows: Option<Vec<model::Project>> = sqlx::query_as(
-                r#"SELECT *
-                FROM projects
-                where projects.objective_id = $1
-                ORDER BY projects.project_id;"#,
+                r#"SELECT * FROM projects WHERE objective_id = $1 ORDER BY project_id;"#,
             )
             .bind(&objective_id)
             .fetch_all(&pool)
             .await
             .ok();
-            let template = templater::ObjectiveTemplate::new(
+            let template = templater::PageObjectiveTemplate::new(
                 obj.title,
                 objective_id,
                 obj.theme_id,
@@ -223,7 +197,7 @@ pub async fn get_objective_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(objective_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let objective_row = sqlx::query_as(r#"SELECT * from objectives where objective_id = $1"#)
+    let objective_row = sqlx::query_as(r#"SELECT * FROM objectives WHERE objective_id = $1"#)
         .bind(&objective_id)
         .fetch_one(&pool)
         .await;
@@ -248,7 +222,7 @@ pub async fn get_objective_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(objective_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let objective_row = sqlx::query_as(r#"SELECT * from objectives where objective_id = $1"#)
+    let objective_row = sqlx::query_as(r#"SELECT * FROM objectives WHERE objective_id = $1"#)
         .bind(&objective_id)
         .fetch_one(&pool)
         .await;
@@ -274,16 +248,13 @@ pub async fn get_objective_keyresults(
     extract::Path(objective_id): extract::Path<i32>,
 ) -> axum::response::Response {
     let keyresults: Option<Vec<model::KeyResult>> = sqlx::query_as(
-        r#"SELECT *
-        FROM keyresults
-        where keyresults.objective_id = $1
-        ORDER BY keyresults.keyresult_id;"#,
+        r#"SELECT * FROM keyresults WHERE objective_id = $1 ORDER BY keyresult_id;"#,
     )
     .bind(&objective_id)
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::TableKeyResultsTemplate::new(keyresults.clone(), objective_id);
+    let template = templater::TableKeyResultsTemplate::new(keyresults, objective_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -293,16 +264,13 @@ pub async fn get_objective_initiatives(
     extract::Path(objective_id): extract::Path<i32>,
 ) -> axum::response::Response {
     let initiatives: Option<Vec<model::Initiative>> = sqlx::query_as(
-        r#"SELECT *
-        FROM initiatives
-        where initiatives.objective_id = $1
-        ORDER BY initiatives.initiative_id;"#,
+        r#"SELECT * FROM initiatives WHERE objective_id = $1 ORDER BY initiative_id;"#,
     )
     .bind(&objective_id)
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::TableInitiativesTemplate::new(initiatives.clone(), objective_id);
+    let template = templater::TableInitiativesTemplate::new(initiatives, objective_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -312,16 +280,15 @@ pub async fn get_objective_projects(
     extract::Path(objective_id): extract::Path<i32>,
 ) -> axum::response::Response {
     let projects: Option<Vec<model::Project>> = sqlx::query_as(
-        r#"SELECT *
-        FROM projects
-        where projects.objective_id = $1
-        ORDER BY projects.project_id;"#,
+        r#"SELECT * FROM projects
+        WHERE objective_id = $1
+        ORDER BY project_id;"#,
     )
     .bind(&objective_id)
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::TableProjectsTemplate::new(projects.clone(), objective_id);
+    let template = templater::TableProjectsTemplate::new(projects, objective_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -345,7 +312,7 @@ pub async fn get_keyresult(
 
     match keyresult_row {
         Ok(keyresult) => {
-            let measurements: Option<Vec<model::Measurement>> = sqlx::query_as(
+            let measurements: Result<Vec<model::Measurement>, _> = sqlx::query_as(
                 r#"SELECT *
                 FROM measurements
                 WHERE measurements.keyresult_id = $1
@@ -353,15 +320,14 @@ pub async fn get_keyresult(
             )
             .bind(&keyresult_id)
             .fetch_all(&pool)
-            .await
-            .ok();
+            .await;
 
-            let template = templater::KeyResultTemplate::new(
+            let template = templater::PageKeyResultTemplate::new(
                 keyresult.title,
                 keyresult.objective_id,
                 keyresult_id,
                 keyresult.objective_title,
-                measurements,
+                measurements.ok(),
             );
             templater::HtmlTemplate(template).into_response()
         }
@@ -380,7 +346,7 @@ pub async fn get_keyresult_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(keyresult_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let keyresult_row = sqlx::query_as(r#"SELECT * from keyresults where keyresult_id = $1"#)
+    let keyresult_row = sqlx::query_as(r#"SELECT * FROM keyresults WHERE keyresult_id = $1"#)
         .bind(&keyresult_id)
         .fetch_one(&pool)
         .await;
@@ -405,7 +371,7 @@ pub async fn get_keyresult_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(keyresult_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let keyresult_row = sqlx::query_as(r#"SELECT * from keyresults where keyresult_id = $1"#)
+    let keyresult_row = sqlx::query_as(r#"SELECT * FROM keyresults WHERE keyresult_id = $1"#)
         .bind(&keyresult_id)
         .fetch_one(&pool)
         .await;
@@ -425,22 +391,24 @@ pub async fn get_keyresult_form(
     }
 }
 
-// GET /keyresult/:keyresult_id/measurements
+// GET /keyresult/:keyresult_id/measures
 pub async fn get_keyresult_measurements(
     Extension(pool): Extension<PgPool>,
     extract::Path(keyresult_id): extract::Path<i32>,
 ) -> axum::response::Response {
+    // let measurements: Result<Vec<model::Measurement>, _> = sqlx::query_as(
     let measurements: Option<Vec<model::Measurement>> = sqlx::query_as(
         r#"SELECT *
         FROM measurements
-        where measurements.keyresult_id = $1
-        ORDER BY measurements.project_id;"#,
+        WHERE keyresult_id = $1
+        ORDER BY measurement_id;"#,
     )
     .bind(&keyresult_id)
     .fetch_all(&pool)
     .await
     .ok();
-    let template = templater::TableMeasurementsTemplate::new(measurements.clone(), keyresult_id);
+    // println!("{:#?}", measurements);
+    let template = templater::TableMeasurementsTemplate::new(measurements, keyresult_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -464,7 +432,7 @@ pub async fn get_initiative(
 
     match initiative_row {
         Ok(initiative) => {
-            let template = templater::InitiativeTemplate::new(
+            let template = templater::PageInitiativeTemplate::new(
                 initiative.title,
                 initiative.objective_id,
                 initiative.objective_title,
@@ -486,7 +454,7 @@ pub async fn get_initiative_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(initiative_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let initiative_row = sqlx::query_as(r#"SELECT * from initiatives where initiative_id = $1"#)
+    let initiative_row = sqlx::query_as(r#"SELECT * FROM initiatives WHERE initiative_id = $1"#)
         .bind(&initiative_id)
         .fetch_one(&pool)
         .await;
@@ -511,7 +479,7 @@ pub async fn get_initiative_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(initiative_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let initiative_row = sqlx::query_as(r#"SELECT * from initiatives where initiative_id = $1"#)
+    let initiative_row = sqlx::query_as(r#"SELECT * FROM initiatives WHERE initiative_id = $1"#)
         .bind(&initiative_id)
         .fetch_one(&pool)
         .await;
@@ -562,7 +530,7 @@ pub async fn get_project(
             .await
             .ok();
 
-            let template = templater::ProjectTemplate::new(
+            let template = templater::PageProjectTemplate::new(
                 project.title,
                 project_id,
                 project.objective_id,
@@ -586,7 +554,7 @@ pub async fn get_project_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(project_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let project_row = sqlx::query_as(r#"SELECT * from projects where project_id = $1"#)
+    let project_row = sqlx::query_as(r#"SELECT * FROM projects WHERE project_id = $1"#)
         .bind(&project_id)
         .fetch_one(&pool)
         .await;
@@ -611,7 +579,7 @@ pub async fn get_project_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(project_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let project_row = sqlx::query_as(r#"SELECT * from projects where project_id = $1"#)
+    let project_row = sqlx::query_as(r#"SELECT * FROM projects WHERE project_id = $1"#)
         .bind(&project_id)
         .fetch_one(&pool)
         .await;
@@ -636,17 +604,13 @@ pub async fn get_project_tasks(
     Extension(pool): Extension<PgPool>,
     extract::Path(project_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let tasks: Option<Vec<model::Task>> = sqlx::query_as(
-        r#"SELECT *
-        FROM tasks
-        where tasks.project_id = $1
-        ORDER BY tasks.task_id;"#,
-    )
-    .bind(&project_id)
-    .fetch_all(&pool)
-    .await
-    .ok();
-    let template = templater::TableTasksTemplate::new(tasks.clone(), project_id);
+    let tasks: Option<Vec<model::Task>> =
+        sqlx::query_as(r#"SELECT * FROM tasks WHERE project_id = $1 ORDER BY task_id;"#)
+            .bind(&project_id)
+            .fetch_all(&pool)
+            .await
+            .ok();
+    let template = templater::TableTasksTemplate::new(tasks, project_id);
     templater::HtmlTemplate(template).into_response()
 }
 
@@ -655,7 +619,7 @@ pub async fn get_task_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(task_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let task_row = sqlx::query_as(r#"SELECT * from tasks where task_id = $1"#)
+    let task_row = sqlx::query_as(r#"SELECT * FROM tasks WHERE task_id = $1"#)
         .bind(&task_id)
         .fetch_one(&pool)
         .await;
@@ -678,7 +642,7 @@ pub async fn get_task_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(task_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let task_row = sqlx::query_as(r#"SELECT * from tasks where task_id = $1"#)
+    let task_row = sqlx::query_as(r#"SELECT * FROM tasks WHERE task_id = $1"#)
         .bind(&task_id)
         .fetch_one(&pool)
         .await;
@@ -701,7 +665,7 @@ pub async fn get_measure_row(
     Extension(pool): Extension<PgPool>,
     extract::Path(measurement_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let measurement_row = sqlx::query_as(r#"SELECT * from measurements where measurement_id = $1"#)
+    let measurement_row = sqlx::query_as(r#"SELECT * FROM measurements WHERE measurement_id = $1"#)
         .bind(&measurement_id)
         .fetch_one(&pool)
         .await;
@@ -726,7 +690,7 @@ pub async fn get_measure_form(
     Extension(pool): Extension<PgPool>,
     extract::Path(measurement_id): extract::Path<i32>,
 ) -> axum::response::Response {
-    let measurement_row = sqlx::query_as(r#"SELECT * from measurements where measurement_id = $1"#)
+    let measurement_row = sqlx::query_as(r#"SELECT * FROM measurements WHERE measurement_id = $1"#)
         .bind(&measurement_id)
         .fetch_one(&pool)
         .await;
@@ -860,7 +824,7 @@ pub async fn add_measure(
         .fetch_all(&pool)
         .await;
     let uri = format!(
-        "/keyresults/{keyresult_id}/measures",
+        "/keyresult/{keyresult_id}/measures",
         keyresult_id = create_measurement.keyresult_id
     );
     Redirect::to(&uri)
@@ -880,7 +844,6 @@ pub async fn update_theme(
     .bind(theme_id)
     .fetch_one(&pool)
     .await;
-    // println!("{:#?}", query_result);
     let uri = format!("/theme/{theme_id}/row");
     Redirect::to(&uri)
 }
@@ -955,7 +918,7 @@ pub async fn update_task(
     extract::Path(task_id): extract::Path<i32>,
     extract::Json(update_task): extract::Json<model::UpdateTask>,
 ) -> Redirect {
-    let _ = sqlx::query(r#"UPDATE tasks SET title=$1, task_status=$2 WHERE project_id=$3"#)
+    let _ = sqlx::query(r#"UPDATE tasks SET title=$1, task_status=$2 WHERE task_id=$3"#)
         .bind(update_task.title)
         .bind(update_task.status)
         .bind(task_id)
@@ -971,7 +934,7 @@ pub async fn update_measure(
     extract::Path(measure_id): extract::Path<i32>,
     extract::Json(update_measure): extract::Json<model::UpdateMeasurement>,
 ) -> Redirect {
-    let _ = sqlx::query(r#"UPDATE measurements SET title=$1 WHERE measurement_id=$2"#)
+    let _ = sqlx::query(r#"UPDATE measurements SET title=$1 WHERE measurement_id=$2;"#)
         .bind(update_measure.title)
         .bind(measure_id)
         .fetch_all(&pool)
@@ -985,9 +948,9 @@ pub async fn remove_theme(
     Extension(pool): Extension<PgPool>,
     extract::Path(theme_id): extract::Path<i32>,
 ) -> impl IntoResponse {
-    let _ = sqlx::query(r#"DELETE FROM themes WHERE theme_id = $1"#)
+    let _ = sqlx::query("DELETE FROM themes WHERE theme_id = $1")
         .bind(theme_id)
-        .fetch_all(&pool)
+        .execute(&pool)
         .await;
     (StatusCode::OK, "")
 }
@@ -997,9 +960,9 @@ pub async fn remove_objective(
     Extension(pool): Extension<PgPool>,
     extract::Path(objective_id): extract::Path<i32>,
 ) -> impl IntoResponse {
-    let _ = sqlx::query(r#"DELETE FROM objectives WHERE objective_id = $1"#)
+    let _ = sqlx::query("DELETE FROM objectives WHERE objective_id = $1")
         .bind(objective_id)
-        .fetch_all(&pool)
+        .execute(&pool)
         .await;
     (StatusCode::OK, "")
 }
@@ -1009,9 +972,9 @@ pub async fn remove_keyresult(
     Extension(pool): Extension<PgPool>,
     extract::Path(keyresult_id): extract::Path<i32>,
 ) -> impl IntoResponse {
-    let _ = sqlx::query(r#"DELETE FROM keyresults WHERE keyresult_id = $1"#)
+    let _ = sqlx::query("DELETE FROM keyresults WHERE keyresult_id = $1")
         .bind(keyresult_id)
-        .fetch_all(&pool)
+        .execute(&pool)
         .await;
     (StatusCode::OK, "")
 }
@@ -1021,9 +984,9 @@ pub async fn remove_initiative(
     Extension(pool): Extension<PgPool>,
     extract::Path(initiative_id): extract::Path<i32>,
 ) -> impl IntoResponse {
-    let _ = sqlx::query(r#"DELETE FROM initiatives WHERE initiative_id = $1"#)
+    let _ = sqlx::query("DELETE FROM initiatives WHERE initiative_id = $1")
         .bind(initiative_id)
-        .fetch_all(&pool)
+        .execute(&pool)
         .await;
     (StatusCode::OK, "")
 }
@@ -1033,9 +996,9 @@ pub async fn remove_project(
     Extension(pool): Extension<PgPool>,
     extract::Path(project_id): extract::Path<i32>,
 ) -> impl IntoResponse {
-    let _ = sqlx::query(r#"DELETE FROM projects WHERE project_id = $1"#)
+    let _ = sqlx::query("DELETE FROM projects WHERE project_id = $1")
         .bind(project_id)
-        .fetch_all(&pool)
+        .execute(&pool)
         .await;
     (StatusCode::OK, "")
 }
@@ -1045,9 +1008,9 @@ pub async fn remove_task(
     Extension(pool): Extension<PgPool>,
     extract::Path(task_id): extract::Path<i32>,
 ) -> impl IntoResponse {
-    let _ = sqlx::query(r#"DELETE FROM tasks WHERE task_id = $1"#)
+    let _ = sqlx::query("DELETE FROM tasks WHERE task_id = $1")
         .bind(task_id)
-        .fetch_all(&pool)
+        .execute(&pool)
         .await;
     (StatusCode::OK, "")
 }
@@ -1057,9 +1020,9 @@ pub async fn remove_measure(
     Extension(pool): Extension<PgPool>,
     extract::Path(measure_id): extract::Path<i32>,
 ) -> impl IntoResponse {
-    let _ = sqlx::query(r#"DELETE FROM measures WHERE measure_id = $1"#)
+    let _ = sqlx::query("DELETE FROM measurements WHERE measurement_id = $1")
         .bind(measure_id)
-        .fetch_all(&pool)
+        .execute(&pool)
         .await;
     (StatusCode::OK, "")
 }
