@@ -1,20 +1,32 @@
-<tr hx-trigger='cancel' class='editing' hx-get="/task/{{task.task_id}}/row">
-    <td><input name='title' value='{{ task.title }}'></td>
+<tr hx-trigger='cancel' class='editing-task' hx-get="/task/{{ task.task_id }}/row">
+    <td class="table-cell">
+        <div class="flex flex-row items-center">
+            <button
+                class="m-1 btn btn-danger flex-none border-solid border-2 border-lime-600 text-lime-600 fill-lime-600 hover:border-lime-800 hover:text-lime-800 hover:bg-lime-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline"
+                hx-put="/task/{{ task.task_id }}" hx-include="closest tr">
+                Save
+            </button>
+            <button
+                class="m-1 btn btn-danger flex-none border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline"
+                hx-get="/task/{{ task.task_id }}/row">
+                Cancel
+            </button>
+            <input name='title' value='{{ task.title }}'
+                class="m-1 flex-grow bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500"
+                placeholder="Task Title" required>
+        </div>
+    </td>
     <td class="dropdown">
         <form action="" name="FILTER">
-            <select name="status" >
-                <option value="NotStarted" class="bg-slate-300">Not Started</option>
-                <option value="InProgress" class="bg-amber-300">In Progress</option>
-                <option value="Completed" class="bg-lime-300">Completed</option>
-            </select>
+            <input type="radio" id="notstarted" name="status" value="NotStarted" {% if
+                task.task_status==Status::NotStarted %} checked="" {% endif %}>
+            <label for="notstarted">Not Started</label><br>
+            <input type="radio" id="inprogress" name="status" value="InProgress" {% if
+                task.task_status==Status::InProgress %} checked="" {% endif %}>
+            <label for="inprogress">In Progress</label><br>
+            <input type="radio" id="completed" name="status" value="Completed" {% if
+                task.task_status==Status::Completed %} checked="" {% endif %}>
+            <label for="completed">Completed</label>
         </form>
-    </td>
-    <td>
-        <button class="btn btn-danger bg-red-600 hover:bg-red-700 px-5 py-3 text-white rounded-lg" hx-get="/task/{{ task.task_id }}/row">
-            Cancel
-        </button>
-        <button class="btn btn-danger bg-lime-600 hover:bg-lime-700 px-5 py-3 text-white rounded-lg" hx-put="/task/{{ task.task_id }}" hx-include="closest tr">
-            Save
-        </button>
     </td>
 </tr>
