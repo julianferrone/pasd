@@ -134,7 +134,7 @@ pub struct UpdateTask {
 #[derive(Debug, Serialize, Deserialize, Clone, FromRow)]
 pub struct Measurement {
     pub measurement_id: i32,
-    pub measurement: String,
+    pub title: String,
     pub keyresult_id: i32,
     pub created_at: Option<chrono::DateTime<chrono::Utc>>,
     pub updated_at: Option<chrono::DateTime<chrono::Utc>>,
