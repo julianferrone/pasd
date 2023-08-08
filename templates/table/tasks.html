@@ -10,8 +10,6 @@
             <th class="w-max text-left px-4">Task</th>
             <th class="w-1/6 text-left px-4">Status</th>
         </thead>
-        <th class="w-1/6">Status</th>
-        </thead>
         <tbody hx-target="closest tr" hx-swap="outerHTML">
             {% for task in tasks %}
             {% include "row/task.html" %}
