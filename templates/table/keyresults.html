@@ -1,12 +1,11 @@
-<div id="keyresults_response">
+<div id="keyresults_response" class="min-w-full">
     {% match keyresults -%}
     {% when Some with (keyresults) %}
     {% let keyresults_len = keyresults.len() %}
     {% if keyresults_len > 0 %}
-    <table class="table-fixed border-2 border-slate-800">
+    <table class="table-fixed border-2 border-slate-800 min-w-full">
         <thead>
-            <th>Key Result</th>
-            <th>Actions</th>
+            <th class="w-full">Key Result</th>
         </thead>
         <tbody hx-target="closest tr" hx-swap="outerHTML">
             {% for keyresult in keyresults %}
@@ -20,10 +19,11 @@
     {% when None %}
     <p>Error when retrieving the key result rows from database.</p>
     {% endmatch %}
-    <br>
     <h3>Add key result</h3>
     <form hx-post="/keyresult" hx-target="#keyresults_response" hx-vals='{"objective_id": {{ objective_id }} }'>
-        <label for="title">Title:</label><input type="text" id="title" name="title"><br>
-        <button type = "submit" class="bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-lg">Create Key Result</button>
+        <label for="title">Title:</label><input type="text" id="title" name="title">
+        <button type="submit"
+            class="btn btn-danger border-solid border-2 border-sky-600 text-sky-600 hover:border-sky-800 hover:text-sky-800 hover:bg-sky-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline">Create
+            Key Result</button>
     </form>
 </div>
