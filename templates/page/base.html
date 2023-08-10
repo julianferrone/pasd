@@ -12,13 +12,28 @@
 </head>
 
 <body hx-boost="true" hx-ext="json-enc">
-    <section>
-        <div class="layout">
-            <div id="content">
-                {% block content %}<p>Placeholder content</p>{% endblock %}
-            </div>
+    <div class="bg-slate-200 min-h-screen">
+        <div class="layout bg-slate-100 min-h-screen">
+            <nav class="grid grid-flow-col items-baseline justify-between bg-slate-900 p-6">
+                <div class="mr-6 flex-none items-center text-white">
+                    <span class="text-xl font-semibold tracking-tight">Peak Achievement System Dashboard</span>
+                </div>
+                <a href="/"
+                    class="mr-4 grid grid-flow-col items-center text-slate-300 stroke-slate-300 hover:text-white hover:stroke-white">
+                    <div class="pr-1">Home</div>
+                    <svg class="h-12 w-12 fill-none stroke-2 p-1.5" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </a>
+            </nav>
+            <section class="px-5">
+                <div id="content">
+                    {% block content %}<p>Placeholder content</p>{% endblock %}
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 </body>
 
 </html>
