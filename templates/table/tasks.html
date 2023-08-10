@@ -23,7 +23,7 @@
     <p>Error when retrieving the task rows from database.</p>
     {% endmatch %}
     <h3 class="mt-6">Add Task</h3>
-    <form hx-post="/task" hx-target="#tasks_response" hx-vals='{"project_id": {{ project_id }} }'>
+    <form hx-post="/task" hx-target="#tasks_response" hx-vals='{"project_id": {{ project_id }} }' autocomplete="off">
         <label for="title" class="block text-sm text-slate-900 duration-300 font-bold">
             Task Title
         </label>

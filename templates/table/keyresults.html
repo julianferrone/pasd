@@ -22,7 +22,8 @@
     <p>Error when retrieving the key result rows from database.</p>
     {% endmatch %}
     <h3 class="mt-6">Add Key Result</h3>
-    <form hx-post="/keyresult" hx-target="#keyresults_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+    <form hx-post="/keyresult" hx-target="#keyresults_response" hx-vals='{"objective_id": {{ objective_id }} }'
+        autocomplete="off">
         <label for="title" class="block text-sm text-slate-900 duration-300 font-bold">
             Key Result Title
         </label>

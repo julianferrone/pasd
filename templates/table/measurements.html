@@ -22,7 +22,7 @@
     <p>Error when retrieving the measurement rows from database.</p>
     {% endmatch %}
     <h3 class="mt-6">Add Measurement</h3>
-    <form hx-post="/measure" hx-target="#measurements_response" hx-vals='{"keyresult_id": {{ keyresult_id }} }'>
+    <form hx-post="/measure" hx-target="#measurements_response" hx-vals='{"keyresult_id": {{ keyresult_id }} }' autocomplete="off">
         <label for="title" class="block text-sm text-slate-900 duration-300 font-bold">
             Measurement Title
         </label>

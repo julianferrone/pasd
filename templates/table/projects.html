@@ -23,7 +23,7 @@
     <p>Error when retrieving the project rows from database.</p>
     {% endmatch %}
     <h3 class="mt-6">Add Project</h3>
-    <form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }'>
+    <form hx-post="/project" hx-target="#projects_response" hx-vals='{"objective_id": {{ objective_id }} }' autocomplete="off">
         <label for="title" class="block text-sm text-slate-900 duration-300 font-bold">
             Project Title
         </label>

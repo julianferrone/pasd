@@ -23,7 +23,7 @@
     <p>Error when retrieving the theme rows from database.</p>
     {% endmatch %}
     <h3 class="mt-6">Add Theme</h3>
-    <form hx-post="/theme" hx-target="#themes_response">
+    <form hx-post="/theme" hx-target="#themes_response" autocomplete="off">
         <label for="title" class="block text-sm text-slate-900 duration-300 font-bold">
             Theme Title
         </label>

@@ -23,8 +23,8 @@
     <p>Error when retrieving the initiative rows from database.</p>
     {% endmatch %}
     <h3 class="mt-6">Add Initiative</h3>
-    <form class="" hx-post="/initiative" hx-target="#initiatives_response"
-        hx-vals='{"objective_id": {{ objective_id }} }'>
+    <form hx-post="/initiative" hx-target="#initiatives_response" hx-vals='{"objective_id": {{ objective_id }} }'
+        autocomplete="off">
         <label for="title" class="block text-sm text-slate-900 duration-300 font-bold">
             Initiative Title
         </label>

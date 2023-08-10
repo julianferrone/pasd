@@ -23,7 +23,7 @@
     {% endmatch %}
     <br>
     <h3 class="mt-6">Add Objective</h3>
-    <form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }'>
+    <form hx-post="/objective" hx-target="#objectives_response" hx-vals='{"theme_id": {{ theme_id }} }' autocomplete="off">
         <label for="title" class="block text-sm text-slate-900 duration-300 font-bold">
             Objective Title
         </label>
