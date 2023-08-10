@@ -7,7 +7,7 @@
         <thead class="table-auto bg-slate-700 text-white border-slate-700 border-2 border-solid h-14">
             <th class="w-12 text-center">Edit</th>
             <th class="w-12 text-center">Trash</th>
-            <th class="w-max text-left px-4">Objective</th>
+            <th class="w-max text-left px-4">Key Result</th>
         </thead>
         <tbody hx-target="closest tr" hx-swap="outerHTML">
             {% for keyresult in keyresults %}
@@ -30,7 +30,7 @@
             class="my-2 w-1/2 block bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:border-sky-600"
             placeholder="Key Result Title" />
         <button type="submit"
-            class="btn btn-danger border-solid border-2 border-sky-600 text-sky-600 hover:border-sky-800 hover:text-sky-800 hover:bg-sky-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline">Create
+            class="btn btn-danger border-solid border-2 border-sky-600 text-sky-600 bg-white hover:border-sky-800 hover:text-sky-800 hover:bg-sky-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline">Create
             Key Result</button>
     </form>
 </div>
