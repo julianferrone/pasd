@@ -1,16 +1,25 @@
-<tr hx-trigger='cancel' class='editing-initiative' hx-get="/initiative/{{ initiative.initiative_id }}/row">
-    <td class="table-cell">
-        <div class="flex flex-row items-center">
+<tr hx-trigger='cancel' class='editing-initiative border-slate-400 border-solid border-x-2 border-b-2'
+    hx-get="/initiative/{{ initiative.initiative_id }}/row">
+    <td>
+        <div class="grid place-items-center h-12">
             <button
-                class="m-1 btn btn-danger flex-none border-solid border-2 border-lime-600 text-lime-600 fill-lime-600 hover:border-lime-800 hover:text-lime-800 hover:bg-lime-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline"
+                class="m-1 btn btn-danger flex-none border-solid border-2 border-lime-600 text-lime-600 fill-lime-600 hover:border-lime-800 hover:text-lime-800 hover:bg-lime-100 w-12 pb-[0.25em] pt-[0.35em] text-center align-baseline text-sm"
                 hx-put="/initiative/{{ initiative.initiative_id }}" hx-include="closest tr">
                 Save
             </button>
+        </div>
+    </td>
+    <td>
+        <div class="grid place-items-center h-12">
             <button
-                class="m-1 btn btn-danger flex-none border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline"
+                class="m-1 btn btn-danger flex-none border-solid border-2 border-red-600 text-red-600 hover:border-red-800 hover:text-red-800 hover:bg-red-100 w-12 pb-[0.25em] pt-[0.35em] text-center align-baseline text-sm"
                 hx-get="/initiative/{{ initiative.initiative_id }}/row">
                 Cancel
             </button>
+        </div>
+    </td>
+    <td>
+        <div class="flex">
             <input name='title' value='{{ initiative.title }}'
                 class="m-1 flex-grow bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500"
                 placeholder="Initiative Title" required>
