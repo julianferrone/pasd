@@ -9,7 +9,7 @@ use sqlx::PgPool;
 
 // GET /
 pub async fn get_root(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
-    let sql = "SELECT * FROM themes".to_string();
+    let sql = "SELECT * FROM themes ORDER BY created_at".to_string();
 
     let themes = sqlx::query_as::<_, model::Theme>(&sql)
         .fetch_all(&pool)
@@ -21,7 +21,7 @@ pub async fn get_root(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
 
 // GET /theme
 pub async fn get_root_themes(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
-    let sql = "SELECT * FROM themes".to_string();
+    let sql = "SELECT * FROM themes ORDER BY created_at".to_string();
 
     let themes = sqlx::query_as::<_, model::Theme>(&sql)
         .fetch_all(&pool)
@@ -37,7 +37,7 @@ pub async fn get_theme(
     extract::Path(theme_id): extract::Path<i32>,
 ) -> axum::response::Response {
     let theme_row: Result<model::Theme, sqlx::Error> =
-        sqlx::query_as(r#"SELECT * FROM themes WHERE theme_id = $1"#)
+        sqlx::query_as(r#"SELECT * FROM themes WHERE theme_id = $1 ORDER BY created_at"#)
             .bind(&theme_id)
             .fetch_one(&pool)
             .await;
@@ -45,7 +45,7 @@ pub async fn get_theme(
     match theme_row {
         Ok(theme) => {
             let objectives: Option<Vec<model::Objective>> = sqlx::query_as(
-                r#"SELECT * FROM objectives WHERE theme_id = $1 ORDER BY objective_id;"#,
+                r#"SELECT * FROM objectives WHERE theme_id = $1 ORDER BY created_at;"#,
             )
             .bind(&theme_id)
             .fetch_all(&pool)
@@ -264,7 +264,7 @@ pub async fn get_objective_initiatives(
     extract::Path(objective_id): extract::Path<i32>,
 ) -> axum::response::Response {
     let initiatives: Option<Vec<model::Initiative>> = sqlx::query_as(
-        r#"SELECT * FROM initiatives WHERE objective_id = $1 ORDER BY initiative_id;"#,
+        r#"SELECT * FROM initiatives WHERE objective_id = $1 ORDER BY created_at;"#,
     )
     .bind(&objective_id)
     .fetch_all(&pool)
@@ -282,7 +282,7 @@ pub async fn get_objective_projects(
     let projects: Option<Vec<model::Project>> = sqlx::query_as(
         r#"SELECT * FROM projects
         WHERE objective_id = $1
-        ORDER BY project_id;"#,
+        ORDER BY created_at;"#,
     )
     .bind(&objective_id)
     .fetch_all(&pool)
@@ -401,7 +401,7 @@ pub async fn get_keyresult_measurements(
         r#"SELECT *
         FROM measurements
         WHERE keyresult_id = $1
-        ORDER BY measurement_id;"#,
+        ORDER BY created_at;"#,
     )
     .bind(&keyresult_id)
     .fetch_all(&pool)
@@ -727,7 +727,7 @@ pub async fn add_theme(
         .fetch_all(&pool)
         .await;
 
-    Redirect::to("/")
+    Redirect::to("/theme")
 }
 
 // POST /objective
