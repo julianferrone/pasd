@@ -76,7 +76,7 @@ pub async fn get_all_tasks(Extension(pool): Extension<PgPool>) -> impl IntoRespo
     (StatusCode::OK, Json(tasks))
 }
 
-// GET /api/measurement
+// GET /api/measure
 pub async fn get_all_measures(Extension(pool): Extension<PgPool>) -> impl IntoResponse {
     let sql = "SELECT * from measures".to_string();
 
