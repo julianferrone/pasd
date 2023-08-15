@@ -241,7 +241,11 @@ pub struct PageInitiativeTemplate {
 }
 
 impl PageInitiativeTemplate {
-    pub fn new(title: String, objective_id: i32, objective_title: String) -> PageInitiativeTemplate {
+    pub fn new(
+        title: String,
+        objective_id: i32,
+        objective_title: String,
+    ) -> PageInitiativeTemplate {
         PageInitiativeTemplate {
             title,
             objective_id,
@@ -415,17 +419,10 @@ pub struct TableTasksTemplate {
 }
 
 impl TableTasksTemplate {
-    pub fn new(
-        tasks: Option<Vec<model::Task>>,
-        project_id: i32,
-    ) -> TableTasksTemplate {
-        TableTasksTemplate {
-            tasks,
-            project_id,
-        }
+    pub fn new(tasks: Option<Vec<model::Task>>, project_id: i32) -> TableTasksTemplate {
+        TableTasksTemplate { tasks, project_id }
     }
 }
-
 
 #[derive(askama::Template)]
 #[template(path = "row/task.html")]
